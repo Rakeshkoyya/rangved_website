@@ -1,26 +1,111 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf7f2;
+  --foreground: #2d1810;
+  --color-background: #faf7f2;
+  --color-foreground: #2d1810;
+  --color-cream: #fff9f0;
+  --color-cream-dark: #f5e6d3;
+  --color-saffron: #e07b39;
+  --color-saffron-light: #f0a060;
+  --color-saffron-dark: #c06020;
+  --color-maroon: #8b3a3a;
+  --color-maroon-light: #b55555;
+  --color-gold: #d4a853;
+  --color-gold-light: #e5c578;
+  --color-charcoal: #4a3428;
+  --color-charcoal-light: #6b4f3e;
+  --color-terracotta: #c97856;
+  --color-terracotta-light: #e09570;
+  --color-olive: #7d8f4a;
+  --color-olive-light: #a0b56a;
+  --color-warm-beige: #e8d5c4;
+  --color-soft-orange: #f4a261;
+  --font-sans: var(--font-playfair);
+  --font-body: var(--font-inter);
+  --font-display: var(--font-playfair);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #faf7f2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4a853;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e5c578;
+}
+
+::selection {
+  background: #e07b39;
+  color: #fff9f0;
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+@keyframes curtainReveal {
+  from {
+    clip-path: inset(0 50% 0 50%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.curtain-reveal {
+  animation: curtainReveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+}
+
+.spotlight {
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(201, 168, 76, 0.08) 0%,
+    transparent 50%
+  );
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #c9a84c 0%, #e0c878 50%, #c9a84c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
