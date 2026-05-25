@@ -3,6 +3,7 @@
 import Navigation from "./components/Navigation";
 import Hero from "./components/Hero";
 import AboutVision from "./components/AboutVision";
+import Events from "./components/Events";
 import ServicesNew from "./components/ServicesNew";
 import WorkShowcase from "./components/WorkShowcase";
 import LegacyTimeline from "./components/LegacyTimeline";
@@ -19,6 +20,7 @@ export default function Home() {
       <main>
         <Hero />
         <AboutVision />
+        <Events />
         <ServicesNew />
         <WorkShowcase />
         <LegacyTimeline />

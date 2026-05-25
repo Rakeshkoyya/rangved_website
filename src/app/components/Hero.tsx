@@ -94,14 +94,14 @@ export default function Hero() {
         </div>
 
         {/* Subtitle */}
-        <p
-          ref={subtitleRef}
-          className="text-xl md:text-3xl text-[#4a3428] max-w-4xl mx-auto mb-12 leading-relaxed font-light"
-        >
-          Voices awaken. Expression deepens.
-          <br />
-          Potential takes the stage.
-        </p>
+        <div ref={subtitleRef} className="mb-12">
+          <p className="text-2xl md:text-4xl text-[#2d1810] max-w-5xl mx-auto leading-tight font-medium tracking-tight">
+            Voices Awaken. Expression deepens.<br />Potential takes the stage.
+          </p>
+          <p className="text-lg md:text-xl text-[#4a3428] mt-4 tracking-[3px]">
+            Performing Arts • Events • Expression • Transformation
+          </p>
+        </div>
 
         {/* CTA Buttons */}
         <motion.div
@@ -114,13 +114,19 @@ export default function Hero() {
             href="#about"
             className="px-8 py-4 bg-[#e07b39] text-white font-semibold rounded-full hover:bg-[#c06020] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-base"
           >
-            Discover Our Story
+            Discover our story
+          </a>
+          <a
+            href="#work"
+            className="px-8 py-4 border-2 border-[#e07b39] text-[#e07b39] font-medium rounded-full hover:bg-[#e07b39] hover:text-white transition-all duration-300 hover:-translate-y-1 text-base"
+          >
+            Explore Our Work
           </a>
           <a
             href="#contact"
             className="px-8 py-4 border-2 border-[#e07b39] text-[#e07b39] font-medium rounded-full hover:bg-[#e07b39] hover:text-white transition-all duration-300 hover:-translate-y-1 text-base"
           >
-            Get in Touch
+            Get in Touch — Partner With Us
           </a>
         </motion.div>
       </div>
