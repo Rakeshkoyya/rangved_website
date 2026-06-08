@@ -1,397 +1,247 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, AnimatePresence } from "framer-motion";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+type Production = {
+  title: string;
+  year: string;
+  venue: string;
+};
 
-const showcaseItems = [
+type Category = {
+  id: string;
+  label: string;
+  heading: string;
+  blurb: string;
+  image: string;
+  imageAlt: string;
+  productions?: Production[];
+  styles?: string[];
+};
+
+const categories: Category[] = [
   {
-    id: 1,
-    title: "Indian Evolution",
-    subtitle: "Annual Day Production",
-    year: "2023",
-    description: "A theatrical journey through India's transformation",
-    image: "/images/work_legacy/1.JPG",
-    color: "#e07b39",
-  },
-  {
-    id: 2,
-    title: "Slurping Beauty",
-    subtitle: "Summer Camp Production",
-    year: "2023",
-    description: "A whimsical twist on classic fairy tales",
-    image: "/images/work_legacy/2.PNG",
-    color: "#d4a853",
-  },
-  {
-    id: 3,
-    title: "Naari Shakti",
-    subtitle: "Special Performance",
-    year: "2025",
-    description: "Celebrating the power and resilience of women",
-    image: "/images/work_legacy/5.jpeg",
-    color: "#c97856",
-  },
-  {
-    id: 4,
-    title: "Mai Hu Tiranga",
-    subtitle: "Patriotic Production",
-    year: "2024",
-    description: "A tribute to the spirit of India",
-    image: "/images/work_legacy/4.JPG",
-    color: "#f4a261",
-  },
-  {
-    id: 5,
-    title: "Street Play & Mime",
-    subtitle: "Social Awareness",
-    year: "2026",
-    description: "Powerful storytelling without words",
-    image: "/images/work_legacy/3.jpeg",
-    color: "#8b3a3a",
-  },
-  {
-    id: 6,
-    title: "The Emperor's New Hair",
-    subtitle: "Summer Camp Comedy",
-    year: "2023",
-    description: "Hilarious reimagining of a timeless tale",
-    image: "/images/work_legacy/7.JPG",
-    color: "#7d8f4a",
-  },
-  {
-    id: 7,
-    title: "Mirror Mirror",
-    subtitle: "Corporate Workshop",
-    year: "2023",
-    description: "Reflecting on identity and transformation",
+    id: "theatre",
+    label: "Theatre Productions",
+    heading: "Theatre Productions",
+    blurb:
+      "Original stage productions brought to life with professional ensembles and immersive storytelling.",
     image: "/images/work_legacy/6.jpg",
-    color: "#e09570",
+    imageAlt: "Theatre production performance",
+    productions: [
+      { title: "Mirror Mirror", year: "2023", venue: "The Exyte Company" },
+      {
+        title: "The Emperor's New Hair",
+        year: "2023",
+        venue: "Walker Town Academy, Secunderabad",
+      },
+    ],
+  },
+  {
+    id: "school",
+    label: "School Productions",
+    heading: "School Productions",
+    blurb:
+      "Large-scale school productions that put hundreds of young performers centre stage.",
+    image: "/images/work_legacy/4.JPG",
+    imageAlt: "School production performance",
+    productions: [
+      {
+        title: "Life of Alluri Seetharamaraju",
+        year: "2024",
+        venue: "Gitanjali Vedika School",
+      },
+      { title: "Mai Hu Tiranga", year: "2024", venue: "Gitanjali Primary School" },
+      {
+        title: "Hazaaron Salaam Mere Desh ke liye",
+        year: "2025",
+        venue: "Gitanjali Vedika School",
+      },
+      {
+        title: "Ghar Ghar ki Kahani",
+        year: "2025",
+        venue: "Alumni event, Gitanjali Group of Schools",
+      },
+      { title: "Naari Shakti", year: "2025", venue: "Gitanjali Primary School" },
+      {
+        title: "Street Play & Mime on Superstition",
+        year: "2026",
+        venue: "St. Joseph High School",
+      },
+    ],
+  },
+  {
+    id: "dance",
+    label: "Dance Performances",
+    heading: "Dance Performances",
+    blurb:
+      "From classical traditions to contemporary moves — choreography across every style.",
+    image: "/images/work_legacy/5.jpeg",
+    imageAlt: "Dance performance",
+    styles: ["Classical", "Western", "Folk", "Hip-Hop", "Garba", "Zumba"],
   },
 ];
 
+const listContainer = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
+  },
+};
+
+const listItem = {
+  hidden: { opacity: 0, y: 20 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: "easeOut" as const },
+  },
+};
+
 export default function LegacyTimeline() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Initial setup - title visible, items hidden
-      gsap.set(titleRef.current, { opacity: 1, y: 0 });
-      itemRefs.current.forEach((item) => {
-        if (item) {
-          gsap.set(item, { opacity: 0 });
-          const img = item.querySelector(".legacy-image");
-          const content = item.querySelector(".legacy-content");
-          const number = item.querySelector(".legacy-number");
-          gsap.set(img, { scale: 1.3, rotation: -5 });
-          gsap.set(content, { x: 100, opacity: 0 });
-          gsap.set(number, { scale: 0, opacity: 0 });
-        }
-      });
-
-      // Create main timeline
-      const mainTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=250%",
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-        },
-      });
-
-      // 1. Title stays visible (0-0.10)
-      // Title is already visible from initial setup
-
-      // 2. Title moves up and fades (0.10-0.15)
-      mainTl
-        .to(titleRef.current, {
-          y: -150,
-          opacity: 0,
-          scale: 0.8,
-          duration: 0.05,
-          ease: "power2.in",
-        }, 0.10);
-
-      // 3. Showcase items (0.15-1.0, leaving last item visible till end)
-      const itemStart = 0.15;
-      const itemEnd = 1.0;
-      const itemDuration = (itemEnd - itemStart) / showcaseItems.length;
-
-      itemRefs.current.forEach((item, index) => {
-        if (!item) return;
-
-        const startTime = itemStart + index * itemDuration;
-        const exitTime = startTime + itemDuration * 0.7;
-        const isLastItem = index === showcaseItems.length - 1;
-
-        const img = item.querySelector(".legacy-image");
-        const content = item.querySelector(".legacy-content");
-        const number = item.querySelector(".legacy-number");
-        const title = item.querySelector(".legacy-title");
-        const subtitle = item.querySelector(".legacy-subtitle");
-        const desc = item.querySelector(".legacy-desc");
-        const year = item.querySelector(".legacy-year");
-
-        // Reveal animations based on index for variety
-        if (index % 3 === 0) {
-          // Zoom reveal with rotation
-          const tl = mainTl
-            .to(item, { opacity: 1, duration: 0 }, startTime)
-            .to(img, {
-              scale: 1,
-              rotation: 0,
-              duration: itemDuration * 0.3,
-              ease: "power2.out",
-            }, startTime)
-            .to(number, {
-              scale: 1,
-              opacity: 0.1,
-              duration: itemDuration * 0.2,
-              ease: "back.out(1.7)",
-            }, startTime + itemDuration * 0.1)
-            .to(content, {
-              x: 0,
-              opacity: 1,
-              duration: itemDuration * 0.25,
-              ease: "power2.out",
-            }, startTime + itemDuration * 0.15)
-            .fromTo([title, subtitle, desc, year], {
-              y: 30,
-              opacity: 0,
-            }, {
-              y: 0,
-              opacity: 1,
-              duration: itemDuration * 0.2,
-              stagger: itemDuration * 0.03,
-              ease: "power2.out",
-            }, startTime + itemDuration * 0.2);
-          
-          // Only add exit animation if not the last item
-          if (!isLastItem) {
-            tl.to(item, {
-              opacity: 0,
-              scale: 0.95,
-              duration: itemDuration * 0.15,
-              ease: "power2.in",
-            }, exitTime);
-          }
-
-        } else if (index % 3 === 1) {
-          // Slide from left
-          const tl = mainTl
-            .to(item, { opacity: 1, duration: 0 }, startTime)
-            .fromTo(img, {
-              x: -window.innerWidth,
-              scale: 1.2,
-            }, {
-              x: 0,
-              scale: 1,
-              duration: itemDuration * 0.35,
-              ease: "power3.out",
-            }, startTime)
-            .to(number, {
-              scale: 1,
-              opacity: 0.1,
-              duration: itemDuration * 0.2,
-              ease: "back.out(1.7)",
-            }, startTime + itemDuration * 0.15)
-            .to(content, {
-              x: 0,
-              opacity: 1,
-              duration: itemDuration * 0.25,
-              ease: "power2.out",
-            }, startTime + itemDuration * 0.2)
-            .fromTo([title, subtitle, desc, year], {
-              x: -50,
-              opacity: 0,
-            }, {
-              x: 0,
-              opacity: 1,
-              duration: itemDuration * 0.2,
-              stagger: itemDuration * 0.03,
-              ease: "power2.out",
-            }, startTime + itemDuration * 0.25);
-          
-          // Only add exit animation if not the last item
-          if (!isLastItem) {
-            tl.to(item, {
-              x: window.innerWidth,
-              opacity: 0,
-              duration: itemDuration * 0.2,
-              ease: "power2.in",
-            }, exitTime);
-          }
-
-        } else {
-          // Circular reveal
-          const tl = mainTl
-            .to(item, { opacity: 1, duration: 0 }, startTime)
-            .fromTo(img, {
-              clipPath: "circle(0% at 50% 50%)",
-              scale: 1.5,
-            }, {
-              clipPath: "circle(70% at 50% 50%)",
-              scale: 1,
-              duration: itemDuration * 0.35,
-              ease: "power2.out",
-            }, startTime)
-            .to(number, {
-              scale: 1,
-              opacity: 0.1,
-              rotation: 360,
-              duration: itemDuration * 0.25,
-              ease: "back.out(1.7)",
-            }, startTime + itemDuration * 0.1)
-            .to(content, {
-              x: 0,
-              opacity: 1,
-              duration: itemDuration * 0.25,
-              ease: "power2.out",
-            }, startTime + itemDuration * 0.2)
-            .fromTo([title, subtitle, desc, year], {
-              scale: 0.8,
-              opacity: 0,
-            }, {
-              scale: 1,
-              opacity: 1,
-              duration: itemDuration * 0.2,
-              stagger: itemDuration * 0.03,
-              ease: "back.out(1.7)",
-            }, startTime + itemDuration * 0.25);
-          
-          // Only add exit animation if not the last item
-          if (!isLastItem) {
-            tl.to(item, {
-              opacity: 0,
-              filter: "blur(20px)",
-              duration: itemDuration * 0.15,
-              ease: "power2.in",
-            }, exitTime);
-          }
-        }
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+  const [active, setActive] = useState(0);
+  const category = categories[active];
 
   return (
     <section
-      ref={containerRef}
-      className="relative bg-[#1a1410] overflow-hidden"
       id="legacy"
-      style={{ height: "100vh" }}
+      className="relative overflow-hidden bg-[#1a1410] py-24 md:py-32"
     >
-      {/* Pinned viewport */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* Animated background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1a1410] via-[#2d1810] to-[#1a1410]">
-          <div className="absolute inset-0 opacity-20">
-            <div className="absolute top-20 left-20 w-96 h-96 bg-[#e07b39] rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute bottom-20 right-20 w-96 h-96 bg-[#d4a853] rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }}></div>
-          </div>
-        </div>
-
-        {/* Title Screen */}
+      {/* Ambient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#1a1410] via-[#2d1810] to-[#1a1410]" />
+      <div className="pointer-events-none absolute inset-0 opacity-20">
+        <div className="absolute -top-10 left-10 h-96 w-96 animate-pulse rounded-full bg-[#e07b39] blur-3xl" />
         <div
-          ref={titleRef}
-          className="absolute inset-0 flex items-center justify-center z-20"
+          className="absolute -bottom-10 right-10 h-96 w-96 animate-pulse rounded-full bg-[#d4a853] blur-3xl"
+          style={{ animationDelay: "1s" }}
+        />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl px-6">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="mb-12 text-center"
         >
-          <div className="text-center px-6">
-            <h2 className="text-6xl md:text-8xl lg:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#e07b39] via-[#d4a853] to-[#e09570] mb-6 font-[family-name:var(--font-playfair)]">
-              Our Legacy
-            </h2>
-            <p className="text-xl md:text-3xl text-[#f5e6d3]/80 tracking-wide">
-              7 Remarkable Productions That Define Excellence
-            </p>
-          </div>
+          <span className="text-sm font-semibold uppercase tracking-[0.3em] text-[#e07b39]">
+            Our Work
+          </span>
+          <h2 className="mt-3 font-[family-name:var(--font-playfair)] text-5xl font-bold text-transparent md:text-7xl bg-clip-text bg-gradient-to-r from-[#e07b39] via-[#d4a853] to-[#e09570]">
+            Our Legacy
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-[#f5e6d3]/70 md:text-xl">
+            A showcase of the productions and performances that define our craft.
+          </p>
+        </motion.div>
+
+        {/* Tabs */}
+        <div className="mb-12 flex flex-wrap items-center justify-center gap-3">
+          {categories.map((c, i) => {
+            const isActive = i === active;
+            return (
+              <button
+                key={c.id}
+                onClick={() => setActive(i)}
+                className={`rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 cursor-pointer md:text-base ${
+                  isActive
+                    ? "bg-gradient-to-r from-[#e07b39] to-[#d4a853] text-[#1a1410] shadow-[0_0_30px_rgba(224,123,57,0.4)]"
+                    : "border border-[#f5e6d3]/15 bg-white/5 text-[#f5e6d3]/80 hover:border-[#e07b39]/50 hover:text-[#f5e6d3]"
+                }`}
+              >
+                {c.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Showcase Items */}
-        {showcaseItems.map((item, index) => (
-          <div
-            key={item.id}
-            ref={(el) => {
-              itemRefs.current[index] = el;
-            }}
-            className="absolute inset-0 z-10"
+        {/* Content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={category.id}
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16"
           >
-            {/* Giant number in background */}
-            <div
-              className="legacy-number absolute 
-                         top-[60%] left-[50%] -translate-x-1/2 -translate-y-1/2 text-[35vw] opacity-[0.08]
-                         lg:top-1/2 lg:left-[70%] lg:text-[40vw] lg:opacity-[0.05]
-                         font-bold pointer-events-none z-0"
-              style={{ color: item.color }}
-            >
-              {item.id}
-            </div>
-
-            {/* Content Grid */}
-            <div className="relative h-full flex items-center">
-              <div className="max-w-7xl mx-auto px-6 md:px-12 w-full">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
-                  {/* Image Side */}
-                  <div className="legacy-image relative">
-                    <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority={index < 2}
-                      />
-                      {/* Gradient overlay */}
-                      <div
-                        className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
-                      />
-                    </div>
-                    {/* Decorative elements */}
-                    <div
-                      className="absolute -top-6 -right-6 w-32 h-32 rounded-full blur-2xl opacity-50"
-                      style={{ backgroundColor: item.color }}
-                    />
-                  </div>
-
-                  {/* Text Side */}
-                  <div className="legacy-content space-y-6">
-                    <div className="legacy-year inline-block px-8 py-4 rounded-2xl text-3xl md:text-4xl font-black tracking-wider shadow-2xl border-2"
-                      style={{
-                        backgroundColor: item.color,
-                        color: '#1a1410',
-                        borderColor: `${item.color}`,
-                        boxShadow: `0 0 40px ${item.color}80, 0 0 80px ${item.color}40`,
-                      }}
-                    >
-                      {item.year}
-                    </div>
-                    <h3 className="legacy-title text-5xl md:text-6xl lg:text-7xl font-bold text-[#f5e6d3] font-[family-name:var(--font-playfair)] leading-tight">
-                      {item.title}
-                    </h3>
-                    <p className="legacy-subtitle text-2xl md:text-3xl font-semibold"
-                      style={{ color: item.color }}
-                    >
-                      {item.subtitle}
-                    </p>
-                    <p className="legacy-desc text-xl md:text-2xl text-[#f5e6d3]/80 leading-relaxed max-w-xl">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
+            {/* Feature photo */}
+            <div className="relative">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl">
+                <Image
+                  src={category.image}
+                  alt={category.imageAlt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               </div>
+              <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-[#e07b39] opacity-40 blur-2xl" />
+              <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-[#d4a853] opacity-30 blur-2xl" />
             </div>
-          </div>
-        ))}
+
+            {/* List side */}
+            <div>
+              <h3 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-[#f5e6d3] md:text-4xl">
+                {category.heading}
+              </h3>
+              <p className="mt-3 max-w-xl text-[#f5e6d3]/65">{category.blurb}</p>
+
+              {category.productions && (
+                <motion.ul
+                  variants={listContainer}
+                  initial="hidden"
+                  animate="show"
+                  className="mt-8 divide-y divide-[#f5e6d3]/10"
+                >
+                  {category.productions.map((p) => (
+                    <motion.li
+                      key={p.title}
+                      variants={listItem}
+                      className="flex items-center justify-between gap-4 py-4"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate text-lg font-semibold text-[#f5e6d3] md:text-xl">
+                          {p.title}
+                        </p>
+                        <p className="mt-0.5 text-sm text-[#f5e6d3]/55">
+                          {p.venue}
+                        </p>
+                      </div>
+                      <span className="shrink-0 rounded-full bg-gradient-to-r from-[#e07b39] to-[#d4a853] px-3 py-1 text-sm font-bold text-[#1a1410]">
+                        {p.year}
+                      </span>
+                    </motion.li>
+                  ))}
+                </motion.ul>
+              )}
+
+              {category.styles && (
+                <motion.div
+                  variants={listContainer}
+                  initial="hidden"
+                  animate="show"
+                  className="mt-8 flex flex-wrap gap-3"
+                >
+                  {category.styles.map((style) => (
+                    <motion.span
+                      key={style}
+                      variants={listItem}
+                      className="rounded-full border border-[#e07b39]/30 bg-white/5 px-5 py-2.5 text-base font-medium text-[#f5e6d3] transition-colors duration-300 hover:border-transparent hover:bg-gradient-to-r hover:from-[#e07b39] hover:to-[#d4a853] hover:text-[#1a1410]"
+                    >
+                      {style}
+                    </motion.span>
+                  ))}
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

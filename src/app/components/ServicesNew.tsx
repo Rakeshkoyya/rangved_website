@@ -1,394 +1,241 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
-
-const services = [
+const carouselSlides = [
   {
     id: 1,
-    title: "Integrated Theatre Curriculum",
+    title: "Theatre Arts",
     description:
-      "A structured theatre program embedded into school learning, developing confidence, communication, and creativity through performance-based education.",
+      "Comprehensive theatre-based training including acting, mime, street theatre, improvisation, storytelling, drama therapy-inspired activities, and expressive movement practices.",
     icon: "🎭",
     color: "from-[#e07b39] to-[#f0a060]",
-    revealType: "fade-overlay",
     image: "/images/services/1.jpeg",
+    programs: [
+      "Integrated School Curriculum",
+      "Hobby Classes & Clubs",
+      "Summer Camps",
+      "Workshops & Productions",
+      "Inclusive Theatre Programs for neurodivergent learners",
+    ],
   },
   {
     id: 2,
-    title: "Hobby Classes & Clubs",
+    title: "Dance",
     description:
-      "Weekly sessions — Engaging after-school theatre sessions that nurture self-expression, imagination, and stage confidence in a fun, creative environment.",
-    icon: "🎨",
+      "Dynamic dance programs combining Western, Classical, Folk, Hiphop, Garba, Zumba and movement-based performance styles that encourage creativity, rhythm, Confidence.",
+    icon: "💃",
     color: "from-[#d4a853] to-[#e5c578]",
-    revealType: "horizontal-wipe",
     image: "/images/services/2.png",
+    programs: [
+      "School Curriculum Programs",
+      "Hobby & Club Sessions",
+      "Summer Camps",
+      "Stage Performances & Competitions",
+      "Choreography-Based Workshops",
+    ],
   },
   {
     id: 3,
-    title: "Summer Camps",
-    description:
-      "Interactive theatre camps designed to build personality, teamwork, and creativity, culminating in a grand final performance.",
-    icon: "☀️",
-    color: "from-[#f4a261] to-[#e09570]",
-    revealType: "explosion",
-    image: "/images/services/3.JPG",
-  },
-  {
-    id: 4,
-    title: "Event Management",
-    description:
-      "Conceptualizing and executing creative events and performances with a strong theatrical touch — from ideation to execution.",
-    icon: "🎪",
+    title: "Annual Day Productions & Corporate Workshops",
+    services: [
+      {
+        title: "Annual Day Productions",
+        description:
+          "End-to-end conceptualization, scripting, direction, choreography, stage planning, and execution of impactful school productions and performances that create memorable stage experiences.",
+        icon: "🎬",
+      },
+      {
+        title: "Corporate Workshops",
+        description:
+          "Interactive theatre, dance, and movement-based workshops designed to enhance communication, leadership, creativity, collaboration, confidence, and team engagement through experiential learning activities.",
+        icon: "💼",
+      },
+    ],
     color: "from-[#c97856] to-[#e09570]",
-    revealType: "circular-reveal",
-    image: "/images/services/4.JPG",
-  },
-  {
-    id: 5,
-    title: "Annual Day Productions",
-    description:
-      "Full production management — End-to-end planning and direction of school productions — from script to stage — creating impactful and memorable performances.",
-    icon: "🎬",
-    color: "from-[#8b3a3a] to-[#b55555]",
-    revealType: "split-slide",
     image: "/images/services/5.PNG",
-  },
-  {
-    id: 6,
-    title: "Corporate Workshops",
-    description:
-      "Theatre-based training programs focused on communication, leadership, team building, and employee engagement.",
-    icon: "💼",
-    color: "from-[#7d8f4a] to-[#a0b56a]",
-    revealType: "blocks-build",
-    image: "/images/services/6.jpg",
-  },
-  {
-    id: 7,
-    title: "Mime & Street Theatre",
-    description:
-      "Powerful, message-driven performances that raise social awareness through expressive, non-verbal and street-style storytelling.",
-    icon: "🎪",
-    color: "from-[#e07b39] to-[#d4a853]",
-    revealType: "diagonal-reveal",
-    image: "/images/services/7.PNG",
   },
 ];
 
 export default function ServicesNew() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-  const serviceRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Hide title and all services initially
-      // gsap.set(titleRef.current, { opacity: 0, y: 50 });
-      gsap.set(titleRef.current, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-        });
-      
-      serviceRefs.current.forEach((service) => {
-        if (service) gsap.set(service, { opacity: 0 });
-      });
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+  };
 
-      // Main scroll timeline - pins the content area
-      const mainTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "+=500%",
-          pin: contentRef.current,
-          scrub: 1,
-          anticipatePin: 1,
-        },
-      });
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+  };
 
-      // 1. Title fade in (0-0.05)
-      mainTl.to(
-        titleRef.current,
-        { opacity: 1, y: 0, duration: 0.05, ease: "power2.out" },
-        0
-      );
-
-      // 2. Title hold (0.05-0.08) - no animation needed
-
-      // 3. Title move up (0.08-0.12)
-      mainTl.to(
-        titleRef.current,
-        { scale: 0.7, y: -100, duration: 0.04, ease: "power2.inOut" },
-        0.08
-      );
-
-      // 4. Title fade out (0.12-0.14)
-      mainTl.to(
-        titleRef.current,
-        { opacity: 0, duration: 0.02, ease: "power2.out" },
-        0.12
-      );
-
-      // Services animation starts
-      const pathStart = 0.14;
-      const pathDuration = 0.86;
-
-      // 5. Animate each service with unique creative reveals
-      const serviceStartTime = pathStart;
-      const serviceSegment = pathDuration / services.length;
-
-      serviceRefs.current.forEach((service, index) => {
-        if (!service) return;
-
-        const revealTime = serviceStartTime + serviceSegment * index;
-        const hideTime = revealTime + serviceSegment * 0.7;
-        const revealType = services[index].revealType;
-
-        const bgImage = service.querySelector(".service-bg") as HTMLElement;
-        const content = service.querySelector(".service-content") as HTMLElement;
-        const titleEl = service.querySelector(".service-title") as HTMLElement;
-        const descEl = service.querySelector(".service-desc") as HTMLElement;
-        const iconEl = service.querySelector(".service-icon") as HTMLElement;
-
-        switch (revealType) {
-          // Service 1: Background fade in, then text overlay
-          case "fade-overlay":
-            mainTl
-              .to(service, { opacity: 1, duration: 0 }, revealTime)
-              .fromTo(
-                bgImage,
-                { opacity: 0, scale: 1.2 },
-                { opacity: 1, scale: 1, duration: 0.03, ease: "power2.out" },
-                revealTime
-              )
-              .fromTo(
-                content,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 0.025, ease: "power2.out" },
-                revealTime + 0.015
-              )
-              .to(service, { opacity: 0, duration: 0.02 }, hideTime);
-            break;
-
-          // Service 2: Horizontal wipe revealing image, text slides in
-          case "horizontal-wipe":
-            mainTl
-              .to(service, { opacity: 1, duration: 0 }, revealTime)
-              .fromTo(
-                bgImage,
-                { clipPath: "inset(0 100% 0 0)" },
-                { clipPath: "inset(0 0% 0 0)", duration: 0.04, ease: "power2.inOut" },
-                revealTime
-              )
-              .fromTo(
-                content,
-                { x: -50, opacity: 0 },
-                { x: 0, opacity: 1, duration: 0.03, ease: "power2.out" },
-                revealTime + 0.02
-              )
-              .to(service, { opacity: 0, duration: 0.02 }, hideTime);
-            break;
-
-          // Service 3: Explosion from center
-          case "explosion":
-            mainTl
-              .to(service, { opacity: 1, duration: 0 }, revealTime)
-              .fromTo(
-                bgImage,
-                { scale: 0, rotation: -180 },
-                { scale: 1, rotation: 0, duration: 0.05, ease: "back.out(2)" },
-                revealTime
-              )
-              .fromTo(
-                [titleEl, descEl, iconEl],
-                { scale: 0, opacity: 0 },
-                {
-                  scale: 1,
-                  opacity: 1,
-                  duration: 0.025,
-                  stagger: 0.008,
-                  ease: "back.out(1.7)",
-                },
-                revealTime + 0.025
-              )
-              .to(service, { scale: 0, opacity: 0, duration: 0.025 }, hideTime);
-            break;
-
-          // Service 4: Circular reveal from dot position
-          case "circular-reveal":
-            mainTl
-              .to(service, { opacity: 1, duration: 0 }, revealTime)
-              .fromTo(
-                bgImage,
-                { clipPath: "circle(0% at 50% 50%)" },
-                { clipPath: "circle(70% at 50% 50%)", duration: 0.04, ease: "power2.out" },
-                revealTime
-              )
-              .fromTo(
-                content,
-                { scale: 0.5, opacity: 0 },
-                { scale: 1, opacity: 1, duration: 0.03, ease: "power2.out" },
-                revealTime + 0.02
-              )
-              .to(service, { opacity: 0, duration: 0.02 }, hideTime);
-            break;
-
-          // Service 5: Split screen slide
-          case "split-slide":
-            mainTl
-              .to(service, { opacity: 1, duration: 0 }, revealTime)
-              .fromTo(
-                bgImage,
-                { x: "-100%" },
-                { x: "0%", duration: 0.04, ease: "power2.inOut" },
-                revealTime
-              )
-              .fromTo(
-                content,
-                { x: "100%", opacity: 0 },
-                { x: "0%", opacity: 1, duration: 0.04, ease: "power2.inOut" },
-                revealTime
-              )
-              .to(service, { opacity: 0, duration: 0.02 }, hideTime);
-            break;
-
-          // Service 6: Vertical blocks assembly
-          case "blocks-build":
-            const blockEls = service.querySelectorAll(".block-piece");
-            mainTl
-              .to(service, { opacity: 1, duration: 0 }, revealTime)
-              .fromTo(
-                blockEls,
-                { y: (i) => (i % 2 === 0 ? -100 : 100), opacity: 0 },
-                {
-                  y: 0,
-                  opacity: 1,
-                  duration: 0.035,
-                  stagger: 0.005,
-                  ease: "power2.out",
-                },
-                revealTime
-              )
-              .fromTo(
-                content,
-                { scale: 0.8, opacity: 0 },
-                { scale: 1, opacity: 1, duration: 0.025, ease: "back.out(1.5)" },
-                revealTime + 0.02
-              )
-              .to(service, { opacity: 0, duration: 0.02 }, hideTime);
-            break;
-
-          // Service 7: Diagonal reveal
-          case "diagonal-reveal":
-            mainTl
-              .to(service, { opacity: 1, duration: 0 }, revealTime)
-              .fromTo(
-                bgImage,
-                { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" },
-                {
-                  clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-                  duration: 0.045,
-                  ease: "power2.inOut",
-                },
-                revealTime
-              )
-              .fromTo(
-                content,
-                { x: 50, y: 50, opacity: 0 },
-                { x: 0, y: 0, opacity: 1, duration: 0.03, ease: "power2.out" },
-                revealTime + 0.02
-              )
-              .to(service, { opacity: 1, duration: 0.02 }, hideTime);
-            break;
-        }
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
 
   return (
     <section
       ref={containerRef}
-      className="relative bg-gradient-to-b from-[#f5e6d3] to-[#fff9f0]"
+      className="relative bg-gradient-to-b from-[#f5e6d3] via-[#fff9f0] to-[#fef8f0] py-20 md:py-32"
       id="services"
-      style={{ height: "600vh" }}
     >
-      {/* Pinned Content Area */}
-      <div
-        ref={contentRef}
-        className="relative w-full h-screen overflow-hidden"
-      >
-        {/* Title - Will reveal and move up then disappear */}
-        <div
-          ref={titleRef}
-          className="absolute inset-0 flex flex-col items-center justify-center z-30 pointer-events-none"
-        >
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#2d1810] mb-4 font-[family-name:var(--font-playfair)] text-center px-6">
-            Our Journey of Services
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#2d1810] mb-3 font-[family-name:var(--font-playfair)]">
+            Performing Arts & Creative Services
           </h2>
-          <p className="text-lg md:text-xl text-[#4a3428] text-center px-6">
-            Follow the path through our transformative offerings
+          <p className="text-lg md:text-xl text-[#d4a853] font-medium">
+            Services We Offer
           </p>
         </div>
 
-        {/* Service displays - stacked absolutely */}
-        {services.map((service, index) => (
-          <div
-            key={service.id}
-            ref={(el) => {
-              serviceRefs.current[index] = el;
-            }}
-            className="absolute inset-0 z-10"
-          >
-            {/* Background Image */}
-            <div className="service-bg absolute inset-0">
-              <Image
-                src={service.image}
-                alt={service.title}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority={index < 2}
-              />
-              {/* Dark overlay for better text readability */}
-              <div className="absolute inset-0 bg-black/40" />
-            </div>
+        {/* Carousel Container */}
+        <div className="relative">
+          {/* Slides Container */}
+          <div className="relative overflow-hidden">
+            <div 
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {carouselSlides.map((slide, index) => (
+                <div
+                  key={slide.id}
+                  className="min-w-full"
+                >
+                  {/* Slide Content */}
+                  <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                    {/* Regular Slides (1 & 2) - Side by Side Layout */}
+                    {slide.programs ? (
+                      <div className="grid md:grid-cols-2 gap-0">
+                        {/* Image Side */}
+                        <div className="relative h-64 md:h-auto">
+                          <Image
+                            src={slide.image}
+                            alt={slide.title}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            priority={index === 0}
+                          />
+                          <div className={`absolute inset-0 bg-gradient-to-br ${slide.color} opacity-20`} />
+                        </div>
 
-            {/* Content */}
-            <div className="service-content absolute inset-0 flex items-center justify-center p-8 md:p-16 z-20">
-              <div className="max-w-4xl mx-auto text-center">
-                <div className={`service-icon text-6xl md:text-8xl mb-6 drop-shadow-2xl`}>
-                  {service.icon}
+                        {/* Content Side */}
+                        <div className="p-8 md:p-12 flex flex-col justify-center">
+                          <h3 className="text-3xl md:text-4xl font-bold text-[#2d1810] mb-4 font-[family-name:var(--font-playfair)]">
+                            {slide.title}
+                          </h3>
+                          <p className="text-base md:text-lg text-[#4a3428] leading-relaxed mb-6">
+                            {slide.description}
+                          </p>
+                          
+                          {/* Programs List */}
+                          <div className="bg-[#fff9f0] rounded-xl p-6 border-l-4 border-[#e07b39]">
+                            <h4 className="text-lg font-semibold text-[#2d1810] mb-4">
+                              Programs Offered:
+                            </h4>
+                            <ul className="space-y-2">
+                              {slide.programs.map((program, idx) => (
+                                <li
+                                  key={idx}
+                                  className="text-sm md:text-base text-[#4a3428] flex items-start gap-2"
+                                >
+                                  <span className="text-[#e07b39] mt-1 flex-shrink-0">•</span>
+                                  <span>{program}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Combined Slide (3) - Grid Layout */
+                      <div>
+                        {/* Image Header */}
+                        <div className="relative h-48 md:h-64">
+                          <Image
+                            src={slide.image}
+                            alt={slide.title}
+                            fill
+                            className="object-cover"
+                            sizes="100vw"
+                            priority={index === 0}
+                          />
+                          <div className={`absolute inset-0 bg-gradient-to-br ${slide.color} opacity-30`} />
+                        </div>
+
+                        {/* Two Services Grid */}
+                        <div className="grid md:grid-cols-2 gap-6 p-8 md:p-12">
+                          {slide.services?.map((service, idx) => (
+                            <div
+                              key={idx}
+                              className="bg-[#fff9f0] rounded-xl p-6 border-t-4 border-[#e07b39] hover:shadow-lg transition-shadow"
+                            >
+                              <h3 className="text-2xl md:text-3xl font-bold text-[#2d1810] mb-3 font-[family-name:var(--font-playfair)]">
+                                {service.title}
+                              </h3>
+                              <p className="text-sm md:text-base text-[#4a3428] leading-relaxed">
+                                {service.description}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <h3 className="service-title text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 font-[family-name:var(--font-playfair)] drop-shadow-2xl">
-                  {service.title}
-                </h3>
-                <p className="service-desc text-lg md:text-2xl text-white/95 leading-relaxed max-w-3xl mx-auto drop-shadow-lg">
-                  {service.description}
-                </p>
-              </div>
+              ))}
             </div>
-
-            {/* Special elements for specific reveal types */}
-            {service.revealType === "blocks-build" && (
-              <>
-                <div className="block-piece absolute top-0 left-0 w-1/3 h-1/2 bg-[#e07b39]/20" />
-                <div className="block-piece absolute top-0 right-0 w-1/3 h-1/2 bg-[#d4a853]/20" />
-                <div className="block-piece absolute bottom-0 left-0 w-1/3 h-1/2 bg-[#c97856]/20" />
-                <div className="block-piece absolute bottom-0 right-0 w-1/3 h-1/2 bg-[#f4a261]/20" />
-              </>
-            )}
           </div>
-        ))}
+
+          {/* Navigation Arrows */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-0 md:-left-12 top-1/2 -translate-y-1/2 z-20 bg-[#e07b39] hover:bg-[#c06020] text-white p-3 rounded-full transition-all duration-300 shadow-lg"
+            aria-label="Previous slide"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-0 md:-right-12 top-1/2 -translate-y-1/2 z-20 bg-[#e07b39] hover:bg-[#c06020] text-white p-3 rounded-full transition-all duration-300 shadow-lg"
+            aria-label="Next slide"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* Dots Navigation */}
+          <div className="flex justify-center gap-2 mt-8">
+            {carouselSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`transition-all duration-300 rounded-full ${
+                  index === currentSlide
+                    ? "w-10 h-3 bg-[#e07b39]"
+                    : "w-3 h-3 bg-[#d4a853]/40 hover:bg-[#d4a853]/70"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Framework Box */}
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-[#e07b39]/20 text-center mt-16">
+          <p className="text-xl md:text-2xl text-[#4a3428] leading-relaxed font-medium">
+            <span className="text-[#e07b39] font-semibold">Rangved's Framework:</span>{" "}
+            Foundation <span className="text-[#e07b39] mx-2">→</span> Exploration{" "}
+            <span className="text-[#e07b39] mx-2">→</span> Performance{" "}
+            <span className="text-[#e07b39] mx-2">→</span> Reflection
+          </p>
+        </div>
       </div>
     </section>
   );

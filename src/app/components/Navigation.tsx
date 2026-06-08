@@ -7,10 +7,10 @@ import Image from "next/image";
 
 const navLinks = [
   { label: "About", href: "#about" },
+  { label: "Events", href: "#events" },
   { label: "Services", href: "#services" },
   { label: "Work", href: "#work" },
   { label: "Legacy", href: "#legacy" },
-  { label: "Framework", href: "#framework" },
   { label: "Founder", href: "#founder" },
   { label: "Testimonials", href: "#testimonials" },
 ];
@@ -20,7 +20,8 @@ export default function Navigation() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => setScrolled(window.scrollY > 80);
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -28,13 +29,13 @@ export default function Navigation() {
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ y: -100, opacity: 0 }}
+        animate={scrolled ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
             ? "bg-white/90 backdrop-blur-md border-b border-[#e07b39]/10 shadow-sm"
-            : "bg-transparent"
+            : "bg-transparent pointer-events-none"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -50,8 +51,8 @@ export default function Navigation() {
                   priority
                 />
               </div>
-              <span className="text-[9px] uppercase tracking-[0.25em] text-[#e07b39] ml-0.5">
-                Theatre & Events
+              <span className="text-[10px] uppercase tracking-[0.25em] text-[#e07b39] ml-0.5">
+              Arts and Events
               </span>
             </a>
 

@@ -8,37 +8,6 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const frameworkSteps = [
-  {
-    number: "I",
-    title: "Foundation",
-    subtitle: "Build Basics",
-    description:
-      "Voice, body, imagination. The raw instruments are prepared with discipline.",
-  },
-  {
-    number: "II",
-    title: "Exploration",
-    subtitle: "Discover Self",
-    description:
-      "Characters are tried on, emotions probed. Every learner finds their distinct register.",
-  },
-  {
-    number: "III",
-    title: "Performance",
-    subtitle: "Apply & Perform",
-    description:
-      "The stage demands presence. Productions are mounted, audiences are met.",
-  },
-  {
-    number: "IV",
-    title: "Reflection",
-    subtitle: "Learn & Grow",
-    description:
-      "What moved, what missed. Every curtain-call becomes the opening line of the next play.",
-  },
-];
-
 const impactStats = [
   { value: "8+", label: "Schools Served", desc: "Public and private institutions across Hyderabad" },
   { value: "3K", label: "Students Trained", desc: "Age group 6–18 years" },
@@ -51,41 +20,6 @@ export default function FrameworkImpact() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Framework section heading
-      gsap.fromTo(
-        ".framework-heading",
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".framework-section",
-            start: "top 85%", // Trigger sooner
-            toggleActions: "play none none none",
-          },
-        }
-      );
-
-      // Framework Steps (Faster duration and stagger, earlier start)
-      gsap.fromTo(
-        ".framework-step",
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5, // Sped up from 0.8
-          stagger: 0.1,  // Sped up from 0.15
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".framework-steps",
-            start: "top 85%", // Trigger as soon as it enters viewport
-            toggleActions: "play none none none",
-          },
-        }
-      );
-
       // Impact section heading
       gsap.fromTo(
         ".impact-heading",
@@ -97,7 +31,7 @@ export default function FrameworkImpact() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: ".impact-section",
-            start: "top 85%", // Trigger sooner
+            start: "top 85%",
             toggleActions: "play none none none",
           },
         }
@@ -137,47 +71,8 @@ export default function FrameworkImpact() {
     <section
       ref={sectionRef}
       className="py-24 bg-gradient-to-b from-[#f5e6d3] to-[#e8d5c4]"
-      id="framework"
+      id="impact"
     >
-      {/* Framework Section */}
-      <div className="framework-section max-w-7xl mx-auto px-6 mb-32">
-        <h2 className="framework-heading text-5xl md:text-6xl font-bold text-[#2d1810] mb-6 text-center font-[family-name:var(--font-playfair)]">
-          Rangved Framework
-        </h2>
-        <p className="text-xl text-[#4a3428] text-center mb-4">
-          We don't just train performers — we build confident, expressive individuals
-        </p>
-        <p className="text-lg text-[#e07b39] text-center mb-16 italic">
-          Four movements of a single play.
-        </p>
-
-        <div className="framework-steps grid md:grid-cols-2 gap-8">
-          {frameworkSteps.map((step, index) => (
-            <div
-              key={index}
-              className="framework-step bg-white/70 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-[#e07b39]/20 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-            >
-              <div className="flex items-start gap-6">
-                <div className="text-6xl font-bold text-[#e07b39] font-[family-name:var(--font-playfair)]">
-                  {step.number}
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-3xl font-bold text-[#2d1810] mb-2 font-[family-name:var(--font-playfair)]">
-                    {step.title}
-                  </h3>
-                  <p className="text-lg text-[#e07b39] font-semibold mb-3">
-                    {step.subtitle}
-                  </p>
-                  <p className="text-[#4a3428] text-lg leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Impact Section */}
       <div className="impact-section max-w-7xl mx-auto px-6">
         <h2 className="impact-heading text-5xl md:text-6xl font-bold text-[#2d1810] mb-16 text-center font-[family-name:var(--font-playfair)]">

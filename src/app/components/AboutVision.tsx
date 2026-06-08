@@ -13,68 +13,35 @@ export default function AboutVision() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // About section animation
       gsap.from(".about-heading", {
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        scrollTrigger: {
-          trigger: ".about-section",
-          start: "top 80%",
-          end: "top 50%",
-          scrub: 1,
-        },
-      });
-
-      gsap.from(".about-text", {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: ".about-section",
-          start: "top 70%",
-          end: "top 40%",
-          scrub: 1,
-        },
-      });
-
-      // Vision section animation
-      gsap.from(".vision-heading", {
-        y: 60,
-        opacity: 0,
-        duration: 1,
-        scrollTrigger: {
-          trigger: ".vision-section",
-          start: "top 80%",
-          end: "top 50%",
-          scrub: 1,
-        },
-      });
-
-      gsap.from(".vision-text", {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        scrollTrigger: {
-          trigger: ".vision-section",
-          start: "top 70%",
-          end: "top 40%",
-          scrub: 1,
-        },
-      });
-
-      gsap.from(".vision-list-item", {
-        x: -30,
+        y: 30,
         opacity: 0,
         duration: 0.8,
-        stagger: 0.1,
+        ease: "power2.out",
         scrollTrigger: {
-          trigger: ".vision-list",
+          trigger: ".about-section",
           start: "top 80%",
-          end: "top 50%",
-          scrub: 1,
+        },
+      });
+
+      gsap.from(".about-card", {
+        y: 40,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".about-card",
+          start: "top 85%",
+        },
+      });
+
+      gsap.from(".highlight-text", {
+        backgroundSize: "0% 100%",
+        duration: 1.2,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: ".highlight-text",
+          start: "top 80%",
         },
       });
     }, sectionRef);
@@ -85,151 +52,79 @@ export default function AboutVision() {
   return (
     <section
       ref={sectionRef}
-      className="py-12 md:py-24 bg-gradient-to-b from-[#fff9f0] to-[#f5e6d3]"
+      className="relative py-20 md:py-32 bg-gradient-to-br from-[#fff9f0] via-[#fef3e8] to-[#fff9f0] overflow-hidden"
       id="about"
     >
-      {/* About Section */}
-      <div className="about-section max-w-6xl mx-auto px-4 md:px-6 mb-16 md:mb-32">
-        <h2 className="about-heading text-4xl md:text-5xl lg:text-6xl font-bold text-[#2d1810] mb-6 md:mb-12 font-[family-name:var(--font-playfair)]">
-          About Rangved
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 text-base md:text-lg text-[#4a3428] leading-relaxed">
-          {/* Mobile Shortened About */}
-          <div className="about-text space-y-4 md:hidden">
-            <p>
-              <strong className="text-[#e07b39] text-xl block mb-1">
-                Rangved is a theatre movement
-              </strong>
-              born in Hyderabad in 2023. We combine drama therapy, expert event management, and modern pedagogy to support expression and transform learning into stage-worthy moments.
-            </p>
-          </div>
-
-          {/* Desktop Original About Part 1 */}
-          <div className="about-text space-y-4 hidden md:block">
-            <p>
-              <strong className="text-[#e07b39] text-2xl block mb-2">
-                Rangved is a theatre movement
-              </strong>
-              born in Hyderabad in 2023. Voices awaken. Expression deepens. Potential takes the stage.
-            </p>
-            <p>
-              Direct compelling theatre-driven events. Experienced in using drama therapy and theatre techniques 
-              (mime, movement, gibberish) to support neurodivergent students' expression and development.
-            </p>
-          </div>
-
-          {/* Desktop Original About Part 2 */}
-          <div className="about-text space-y-4 hidden md:block">
-            <p>
-              Organizing workshops, productions & creative programs. Transform learning into stage-worthy moments. 
-              Expert event management.
-            </p>
-            <p>
-              Rooted in Indian theatrical traditions, shaped by modern pedagogy. A passionate team collaborating 
-              with leading schools, organizations to create transformative experiences.
-            </p>
-          </div>
-        </div>
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-full h-full opacity-[0.03]">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-[#e07b39] rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#2d1810] rounded-full blur-3xl"></div>
       </div>
 
-      {/* Vision Section */}
-      <div className="vision-section max-w-6xl mx-auto px-4 md:px-6">
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-12 shadow-xl border border-[#e07b39]/20">
-          <h2 className="vision-heading text-4xl md:text-5xl lg:text-6xl font-bold text-[#2d1810] mb-4 md:mb-6 font-[family-name:var(--font-playfair)]">
-            Our Vision 2027
-          </h2>
+      <div className="about-section relative max-w-5xl mx-auto px-6 md:px-8">
+        {/* Heading */}
+        <h2 className="about-heading text-4xl md:text-5xl lg:text-6xl font-bold text-[#2d1810] mb-6 text-center font-[family-name:var(--font-playfair)] tracking-tight">
+          About Rangved
+        </h2>
+        
+        {/* Subtitle */}
+        <p className="about-heading text-lg md:text-xl text-[#4a3428]/70 text-center max-w-3xl mx-auto mb-16 font-light">
+          A creative performing arts and experiential events organization
+        </p>
 
-          {/* Mobile Shortened Vision Text */}
-          <p className="vision-text text-base md:hidden text-[#4a3428] mb-6 leading-relaxed">
-            To build a transformative ecosystem combining theatre, education, and events to shape confident, creative individuals. We aim to help people discover their voice and build meaningful connections.
-          </p>
+        {/* Main Content Card */}
+        <div className="about-card group relative bg-white rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] transition-all duration-500 border border-[#e07b39]/10 hover:border-[#e07b39]/20">
+          {/* Top accent line */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#e07b39] to-transparent rounded-t-3xl"></div>
+          
+          <div className="space-y-6 text-[#4a3428] leading-relaxed">
+            {/* Intro paragraph */}
+            <p className="text-lg md:text-xl">
+              <span className="highlight-text inline-block bg-gradient-to-r from-[#e07b39]/20 to-transparent bg-[length:0%_100%] bg-no-repeat transition-all duration-1000" style={{ backgroundSize: "100% 100%" }}>
+                Rangved is a creative
+              </span>  performing arts and experiential events organization based in Hyderabad, dedicated to building <strong className="font-semibold text-[#2d1810]">expression, confidence, creativity</strong>, and meaningful experiences through art and engagement.
+            </p>
 
-          {/* Desktop Original Vision Text */}
-          <p className="vision-text text-xl hidden md:block text-[#4a3428] mb-8 leading-relaxed max-w-4xl">
-            To build a transformative ecosystem where theatre, education, and event experiences come together 
-            to shape confident, creative, and conscious individuals. At Rangved, we envision creating impactful 
-            stages and thoughtfully curated events that go beyond performance — enabling people to discover their 
-            voice, build meaningful connections, and lead with confidence in every sphere of life.
-          </p>
+            {/* Divider */}
+            <div className="py-2">
+              <div className="h-px bg-gradient-to-r from-transparent via-[#e07b39]/30 to-transparent"></div>
+            </div>
 
-          <h3 className="vision-text text-2xl md:text-3xl font-semibold text-[#e07b39] mb-4 md:mb-6 mt-6 md:mt-12">
-            Our Vision in Action
-          </h3>
+            {/* Core services */}
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-[#2d1810] flex items-center gap-2">
+                  <span className="w-2 h-2 bg-[#e07b39] rounded-full"></span>
+                  Our Expertise
+                </h3>
+                <p className="text-base pl-4">
+                  Blending <strong className="font-medium text-[#2d1810]">theatre, dance, storytelling</strong>, and event experiences, we collaborate with schools, corporates, and communities to create impactful productions, workshops, cultural events, and immersive learning environments.
+                </p>
+              </div>
 
-          {/* Mobile Condensed Vision List */}
-          <ul className="vision-list space-y-3 md:hidden">
-            <li className="vision-list-item flex items-start gap-2">
-              <span className="text-[#e07b39] text-xl">•</span>
-              <span className="text-[#4a3428] text-sm">
-                Expanding across Telangana to reach diverse communities
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-2">
-              <span className="text-[#e07b39] text-xl">•</span>
-              <span className="text-[#4a3428] text-sm">
-                Organizing inter-school theatre festivals & certifications
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-2">
-              <span className="text-[#e07b39] text-xl">•</span>
-              <span className="text-[#4a3428] text-sm">
-                Delivering theatre-driven event management experiences
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-2">
-              <span className="text-[#e07b39] text-xl">•</span>
-              <span className="text-[#4a3428] text-sm">
-                Connecting schools, corporates, and communities
-              </span>
-            </li>
-          </ul>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-[#2d1810] flex items-center gap-2">
+                  <span className="w-2 h-2 bg-[#e07b39] rounded-full"></span>
+                  What We Do
+                </h3>
+                <p className="text-base pl-4">
+                  From theatre productions and performing arts training to corporate events, educational programs, and curated experiences — we <strong className="font-medium text-[#2d1810]">transform ideas into memorable moments</strong>.
+                </p>
+              </div>
+            </div>
 
-          {/* Desktop Original Vision List */}
-          <ul className="vision-list space-y-4 hidden md:block">
-            <li className="vision-list-item flex items-start gap-3">
-              <span className="text-[#e07b39] text-2xl">•</span>
-              <span className="text-[#4a3428] text-lg">
-                Expanding across Telangana and allied states to reach diverse communities
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-3">
-              <span className="text-[#e07b39] text-2xl">•</span>
-              <span className="text-[#4a3428] text-lg">
-                Organizing inter-school theatre festivals that celebrate young talent
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-3">
-              <span className="text-[#e07b39] text-2xl">•</span>
-              <span className="text-[#4a3428] text-lg">
-                Conceptualizing and delivering end-to-end event management with a strong theatrical and experiential touch
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-3">
-              <span className="text-[#e07b39] text-2xl">•</span>
-              <span className="text-[#4a3428] text-lg">
-                Introducing certification programmes to nurture and recognize performers
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-3">
-              <span className="text-[#e07b39] text-2xl">•</span>
-              <span className="text-[#4a3428] text-lg">
-                Designing and executing theatre-driven events and experiences
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-3">
-              <span className="text-[#e07b39] text-2xl">•</span>
-              <span className="text-[#4a3428] text-lg">
-                Creating platforms for holistic development through performance and participation
-              </span>
-            </li>
-            <li className="vision-list-item flex items-start gap-3">
-              <span className="text-[#e07b39] text-2xl">•</span>
-              <span className="text-[#4a3428] text-lg">
-                Building a strong ecosystem connecting schools, corporates, and communities
-              </span>
-            </li>
-          </ul>
+            {/* Philosophy - highlighted box */}
+            <div className="mt-8 relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-[#e07b39]/5 via-[#e07b39]/10 to-[#e07b39]/5 rounded-2xl blur-xl"></div>
+              <div className="relative bg-gradient-to-br from-[#fff9f0] to-white p-6 md:p-8 rounded-2xl border-l-4 border-[#e07b39]">
+                <p className="text-base md:text-lg leading-relaxed">
+                  {/* <span className="text-2xl text-[#e07b39] mr-2">"</span> */}
+                  Rooted in <strong className="font-semibold text-[#e07b39]">Indian aesthetics</strong> and shaped by modern creative practices, we believe in using art not just as performance — but as a <strong className="font-semibold text-[#2d1810]">powerful medium for connection, transformation, and celebration</strong>.
+                  {/* <span className="text-2xl text-[#e07b39] ml-1">"</span> */}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

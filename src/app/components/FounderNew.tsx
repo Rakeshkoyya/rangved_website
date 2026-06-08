@@ -9,20 +9,6 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const expertise = [
-  "Original script writing & direction",
-  "Mime, improvisation & physical theatre",
-  "Character-building & confidence development",
-  "Experience in training teachers and learners across all age groups",
-  "Creating a safe, engaging, and learner-friendly environment",
-  "Designing interactive and creative theatre-based activities",
-  "Strong conflict resolution & group facilitation skills",
-  "Equipped with digital and AI-enabled creative tools",
-  "Event management — from concept to curtain",
-  "Strong knowledge of music and theatre technicals (lights, stage, sound)",
-  "Proficient in PowerPoint presentations and visual storytelling",
-];
-
 const highlights = [
   { label: "4+ Years", subtitle: "Experience" },
   { label: "15+ Plays", subtitle: "Stage Performances" },
@@ -112,24 +98,6 @@ export default function FounderNew() {
           scrollTrigger: {
             trigger: ".founder-content",
             start: "top 60%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-
-      // Expertise items animation
-      gsap.fromTo(
-        ".expertise-item",
-        { x: -40, opacity: 0 },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.08,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: ".expertise-grid",
-            start: "top 75%",
             toggleActions: "play none none none",
           },
         }
@@ -275,31 +243,6 @@ export default function FounderNew() {
                   </span>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Core Expertise */}
-          <div className="border-t border-[#e07b39]/10 bg-gradient-to-b from-transparent to-[#fff9f0]/50 px-6 md:px-8 lg:px-10 py-8">
-            <div className="mb-6">
-              <h3 className="text-2xl md:text-3xl font-bold text-[#2d1810] font-[family-name:var(--font-playfair)] mb-2 text-center">
-                Core Expertise
-              </h3>
-              <p className="text-[#4a3428]/70 text-sm md:text-base text-center">
-                A diverse skillset spanning theatre, facilitation & digital creativity
-              </p>
-            </div>
-            <div className="expertise-grid grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
-              {expertise.map((item, index) => (
-                <div
-                  key={index}
-                  className="expertise-item flex items-start gap-2.5 text-[#4a3428] text-sm md:text-base p-3 rounded-lg hover:bg-white/60 transition-colors duration-300 group"
-                >
-                  <span className="text-[#e07b39] text-lg mt-0.5 group-hover:scale-125 transition-transform duration-300 flex-shrink-0">
-                    ✓
-                  </span>
-                  <span className="leading-snug">{item}</span>
-                </div>
-              ))}
             </div>
           </div>
         </div>

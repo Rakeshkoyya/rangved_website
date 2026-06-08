@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,10 +11,29 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+const heroImages = [
+  "/images/hero/1.JPG",
+  "/images/hero/2.JPG",
+  "/images/hero/3.PNG",
+  "/images/hero/4.PNG",
+  "/images/hero/5.PNG",
+  "/images/hero/6.jpeg",
+  "/images/hero/7.jpeg",
+];
+
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const [currentImage, setCurrentImage] = useState(0);
+
+  // Auto-advancing background slideshow with smooth crossfade
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -68,14 +87,27 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#fff9f0] via-[#f5e6d3] to-[#e8d5c4]"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1a1410]"
       id="hero"
     >
-      {/* Decorative elements */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#e07b39] rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#d4a853] rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-[#c97856] rounded-full blur-3xl"></div>
+      {/* Background slideshow */}
+      <div className="absolute inset-0">
+        {heroImages.map((image, index) => (
+          <div
+            key={image}
+            className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+            style={{ opacity: currentImage === index ? 1 : 0 }}
+          >
+            <Image
+              src={image}
+              alt=""
+              fill
+              className="object-cover scale-105 blur-[3px]"
+              sizes="100vw"
+              priority={index === 0}
+            />
+          </div>
+        ))}
       </div>
 
       {/* Content */}
@@ -88,7 +120,7 @@ export default function Hero() {
             src="/images/founder/rangved.png"
             alt="Rangved"
             fill
-            className="object-contain"
+            className="object-contain [filter:drop-shadow(0_2px_18px_rgba(255,255,255,0.55))]"
             priority
           />
         </div>
@@ -96,11 +128,9 @@ export default function Hero() {
         {/* Subtitle */}
         <p
           ref={subtitleRef}
-          className="text-xl md:text-3xl text-[#4a3428] max-w-4xl mx-auto mb-12 leading-relaxed font-light"
+          className="text-xl md:text-3xl text-[#f5e6d3] max-w-4xl mx-auto mb-12 leading-relaxed font-light drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
         >
-          Voices awaken. Expression deepens.
-          <br />
-          Potential takes the stage.
+          Performing Arts • Events • Expression • Transformation
         </p>
 
         {/* CTA Buttons */}
@@ -111,23 +141,23 @@ export default function Hero() {
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
         >
           <a
-            href="#about"
+            href="#work"
             className="px-8 py-4 bg-[#e07b39] text-white font-semibold rounded-full hover:bg-[#c06020] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-base"
           >
-            Discover Our Story
+            Explore Our Work
           </a>
           <a
             href="#contact"
-            className="px-8 py-4 border-2 border-[#e07b39] text-[#e07b39] font-medium rounded-full hover:bg-[#e07b39] hover:text-white transition-all duration-300 hover:-translate-y-1 text-base"
+            className="px-8 py-4 border-2 border-white/80 text-white font-medium rounded-full hover:bg-white hover:text-[#1a1410] transition-all duration-300 hover:-translate-y-1 text-base backdrop-blur-sm"
           >
-            Get in Touch
+            Partner With Us
           </a>
         </motion.div>
       </div>
 
       {/* Scroll Indicator */}
       <motion.div
-        className="scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#e07b39]"
+        className="scroll-indicator absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#f5e6d3]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}

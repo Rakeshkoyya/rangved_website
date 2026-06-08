@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Quote, Star, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
@@ -67,10 +67,89 @@ const testimonials = [
 
 export default function TestimonialsNew() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const floatingQuoteRef = useRef<HTMLDivElement>(null);
-  const [activeCard, setActiveCard] = useState<number | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [stageHeight, setStageHeight] = useState(420);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Track viewport so side previews only show on larger screens
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  // Size the stage to the tallest currently-visible card (active + neighbours)
+  // so nothing is clipped, no card overflows onto the controls, and there is no
+  // dead space. Re-measure when the slide, viewport or window size changes.
+  useEffect(() => {
+    const measure = () => {
+      const total = testimonials.length;
+      const prev = (currentSlide - 1 + total) % total;
+      const next = (currentSlide + 1) % total;
+      const visible = isDesktop
+        ? [prev, currentSlide, next]
+        : [currentSlide];
+      const tallest = visible.reduce((max, i) => {
+        const h = cardRefs.current[i]?.offsetHeight ?? 0;
+        return Math.max(max, h);
+      }, 0);
+      if (tallest > 0) setStageHeight(tallest);
+    };
+    // Measure after layout settles (fonts/content) for an accurate height
+    const raf = requestAnimationFrame(measure);
+    window.addEventListener("resize", measure);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", measure);
+    };
+  }, [currentSlide, isDesktop]);
+
+  // Compute the coverflow transform for a card based on its distance from the
+  // active slide. Center sits on top; neighbours peek out behind it, faint and
+  // blurred. On mobile only the center card is shown.
+  const getCardStyle = (index: number): CSSProperties => {
+    const total = testimonials.length;
+    let offset = index - currentSlide;
+    if (offset > total / 2) offset -= total;
+    if (offset < -total / 2) offset += total;
+
+    const base = "translateX(-50%)";
+
+    if (offset === 0) {
+      return {
+        transform: `${base} translateX(0px) scale(1)`,
+        opacity: 1,
+        filter: "blur(0px)",
+        zIndex: 30,
+        pointerEvents: "auto",
+      };
+    }
+
+    // Neighbours are hidden entirely on mobile (single-card view)
+    if (!isDesktop || Math.abs(offset) > 1) {
+      return {
+        transform: `${base} translateX(${offset < 0 ? -480 : 480}px) scale(0.7)`,
+        opacity: 0,
+        filter: "blur(8px)",
+        zIndex: 0,
+        pointerEvents: "none",
+      };
+    }
+
+    // Immediate left / right preview cards
+    const shift = offset < 0 ? -340 : 340;
+    return {
+      transform: `${base} translateX(${shift}px) scale(0.82)`,
+      opacity: 0.45,
+      filter: "blur(4px)",
+      zIndex: 10,
+      pointerEvents: "none",
+    };
+  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -113,65 +192,17 @@ export default function TestimonialsNew() {
         },
       });
 
-      // Cards parallax and entrance animation
-      cardsRef.current.forEach((card, index) => {
-        if (!card) return;
-
-        // Entrance animation with rotation and scale
-        gsap.from(card, {
-          y: 100,
-          opacity: 0,
-          scale: 0.8,
-          rotationY: -15,
-          duration: 1,
-          delay: index * 0.1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 90%",
-            toggleActions: "play none none none",
-          },
-        });
-
-        // Parallax effect on scroll
-        gsap.to(card, {
-          y: -50,
-          ease: "none",
-          scrollTrigger: {
-            trigger: card,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-
-        // Mouse move 3D tilt effect
-        card.addEventListener("mousemove", (e: MouseEvent) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = (y - centerY) / 10;
-          const rotateY = (centerX - x) / 10;
-
-          gsap.to(card, {
-            rotationX: rotateX,
-            rotationY: rotateY,
-            transformPerspective: 1000,
-            duration: 0.3,
-            ease: "power2.out",
-          });
-        });
-
-        card.addEventListener("mouseleave", () => {
-          gsap.to(card, {
-            rotationX: 0,
-            rotationY: 0,
-            duration: 0.5,
-            ease: "power2.out",
-          });
-        });
+      // Carousel entrance animation
+      gsap.from(".carousel-container", {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".carousel-container",
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
       });
 
       // Decorative elements animation
@@ -195,7 +226,7 @@ export default function TestimonialsNew() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+    }, 6000); // Auto-advance every 6 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -233,7 +264,7 @@ export default function TestimonialsNew() {
 
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="text-[#d4a853] animate-pulse" size={20} />
             <span className="text-[#e07b39] text-sm tracking-[0.3em] uppercase font-semibold">
@@ -254,120 +285,78 @@ export default function TestimonialsNew() {
           </p>
         </div>
 
-        {/* Desktop: Equal-sized Grid Layout */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              ref={(el) => {
-                cardsRef.current[index] = el;
-              }}
-              className="testimonial-card group cursor-pointer"
-              style={{ transformStyle: "preserve-3d" }}
-              onMouseEnter={() => setActiveCard(index)}
-              onMouseLeave={() => setActiveCard(null)}
-            >
-              <div className="relative h-full min-h-[380px] bg-gradient-to-br from-white to-[#fff9f0] rounded-3xl p-8 shadow-2xl border border-[#e07b39]/20 overflow-hidden transition-all duration-500 hover:shadow-[0_20px_60px_rgba(224,123,57,0.3)] flex flex-col">
-                {/* Glassmorphism overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
-                {/* Content */}
-                <div className="relative z-10 flex flex-col h-full">
-                  {testimonial.highlight && (
-                    <span className="inline-block px-4 py-1 bg-gradient-to-r from-[#e07b39] to-[#d4a853] text-white text-xs font-semibold rounded-full mb-4 w-fit">
-                      {testimonial.highlight}
-                    </span>
-                  )}
-                  
-                  <Quote className="text-[#e07b39] mb-4 transform group-hover:scale-110 transition-transform duration-300" size={36} />
-                  
-                  <p className="text-[#4a3428] text-base md:text-lg leading-relaxed mb-6 flex-1">
-                    "{testimonial.text}"
-                  </p>
-                  
-                  <div>
-                    <div className="flex items-center gap-1 mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="text-[#d4a853] fill-[#d4a853]"
-                          size={16}
-                        />
-                      ))}
-                    </div>
-                    
-                    <div className="border-t border-[#e07b39]/20 pt-4">
-                      <p className="text-[#2d1810] font-bold text-lg mb-1">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-[#e07b39] font-medium text-sm">
-                        {testimonial.role} • {testimonial.year}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+        {/* Coverflow carousel — center card on top, neighbours faint behind */}
+        <div className="carousel-container relative">
+          <div
+            className="relative transition-[height] duration-700 ease-out"
+            style={{ height: stageHeight }}
+          >
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="absolute top-0 left-1/2 w-full max-w-2xl px-4 will-change-transform transition-[transform,opacity,filter] duration-700 ease-out"
+                style={getCardStyle(index)}
+              >
+                <div
+                  ref={(el) => {
+                    cardRefs.current[index] = el;
+                  }}
+                  className="relative bg-gradient-to-br from-white to-[#fff9f0] rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(224,123,57,0.15)] border border-[#e07b39]/20 min-h-[380px] flex flex-col group"
+                >
+                  {/* Glassmorphism overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none" />
 
-                {/* Decorative corner accent */}
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-[#e07b39]/20 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Mobile: Carousel */}
-        <div className="md:hidden relative">
-          <div className="overflow-hidden rounded-3xl">
-            <div
-              className="flex transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {testimonials.map((testimonial, index) => (
-                <div key={index} className="w-full flex-shrink-0 px-4">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-[#e07b39]/20">
+                  {/* Content */}
+                  <div className="relative z-10 flex flex-col h-full">
                     {testimonial.highlight && (
-                      <span className="inline-block px-4 py-1 bg-gradient-to-r from-[#e07b39] to-[#d4a853] text-white text-xs font-semibold rounded-full mb-4">
+                      <span className="inline-block px-4 py-1 bg-gradient-to-r from-[#e07b39] to-[#d4a853] text-white text-xs font-semibold rounded-full mb-4 w-fit">
                         {testimonial.highlight}
                       </span>
                     )}
-                    
-                    <Quote className="text-[#e07b39] mb-4" size={36} />
-                    
-                    <p className="text-[#4a3428] text-lg leading-relaxed mb-6">
-                      "{testimonial.text}"
+
+                    <Quote className="text-[#e07b39] mb-4 transform group-hover:scale-110 transition-transform duration-300" size={36} />
+
+                    <p className="text-[#4a3428] text-base md:text-lg leading-relaxed mb-6 flex-1">
+                      &ldquo;{testimonial.text}&rdquo;
                     </p>
-                    
-                    <div className="flex items-center gap-1 mb-4">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="text-[#d4a853] fill-[#d4a853]"
-                          size={16}
-                        />
-                      ))}
-                    </div>
-                    
-                    <div className="border-t border-[#e07b39]/20 pt-4">
-                      <p className="text-[#2d1810] font-bold text-lg">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-[#e07b39]">
-                        {testimonial.role} • {testimonial.year}
-                      </p>
+
+                    <div>
+                      <div className="flex items-center gap-1 mb-4">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className="text-[#d4a853] fill-[#d4a853]"
+                            size={16}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="border-t border-[#e07b39]/20 pt-4">
+                        <p className="text-[#2d1810] font-bold text-lg mb-1">
+                          {testimonial.name}
+                        </p>
+                        <p className="text-[#e07b39] font-medium text-sm">
+                          {testimonial.role} • {testimonial.year}
+                        </p>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Decorative corner accent */}
+                  <div className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-[#e07b39]/20 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500 pointer-events-none -z-10" />
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
 
           {/* Carousel Controls */}
-          <div className="flex items-center justify-center gap-4 mt-8">
+          <div className="relative z-50 flex items-center justify-center gap-4 mt-12">
             <button
               onClick={prevSlide}
-              className="w-12 h-12 rounded-full bg-white shadow-lg border border-[#e07b39]/20 flex items-center justify-center text-[#e07b39] hover:bg-[#e07b39] hover:text-white transition-all duration-300 cursor-pointer"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white shadow-lg border border-[#e07b39]/20 flex items-center justify-center text-[#e07b39] hover:bg-[#e07b39] hover:text-white hover:scale-110 transition-all duration-300 cursor-pointer"
               aria-label="Previous testimonial"
             >
-              <ChevronLeft size={20} />
+              <ChevronLeft size={24} />
             </button>
             
             <div className="flex gap-2">
@@ -375,10 +364,10 @@ export default function TestimonialsNew() {
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                  className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                     index === currentSlide
                       ? "bg-[#e07b39] w-8"
-                      : "bg-[#e07b39]/30"
+                      : "bg-[#e07b39]/30 w-2"
                   }`}
                   aria-label={`Go to testimonial ${index + 1}`}
                 />
@@ -387,10 +376,10 @@ export default function TestimonialsNew() {
             
             <button
               onClick={nextSlide}
-              className="w-12 h-12 rounded-full bg-white shadow-lg border border-[#e07b39]/20 flex items-center justify-center text-[#e07b39] hover:bg-[#e07b39] hover:text-white transition-all duration-300 cursor-pointer"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white shadow-lg border border-[#e07b39]/20 flex items-center justify-center text-[#e07b39] hover:bg-[#e07b39] hover:text-white hover:scale-110 transition-all duration-300 cursor-pointer"
               aria-label="Next testimonial"
             >
-              <ChevronRight size={20} />
+              <ChevronRight size={24} />
             </button>
           </div>
         </div>
