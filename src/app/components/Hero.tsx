@@ -102,12 +102,16 @@ export default function Hero() {
               src={image}
               alt=""
               fill
-              className="object-cover scale-105 blur-[3px]"
+              className="object-cover scale-105"
               sizes="100vw"
               priority={index === 0}
             />
           </div>
         ))}
+        
+        {/* Gradient Overlays for readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#2d1810]/20 via-[#4a3428]/55 to-[#8b3a3a]/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10" />
       </div>
 
       {/* Content */}
@@ -120,7 +124,7 @@ export default function Hero() {
             src="/images/founder/rangved.png"
             alt="Rangved"
             fill
-            className="object-contain [filter:drop-shadow(0_2px_18px_rgba(255,255,255,0.55))]"
+            className="object-contain"
             priority
           />
         </div>
