@@ -23,13 +23,13 @@ type Category = {
 
 const categories: Category[] = [
   {
-    id: "theatre",
-    label: "Theatre Productions",
-    heading: "Theatre Productions",
+    id: "corporate",
+    label: "Corporate Productions",
+    heading: "Corporate Productions",
     blurb:
       "Original stage productions brought to life with professional ensembles and immersive storytelling.",
     image: "/images/work_legacy/6.jpg",
-    imageAlt: "Theatre production performance",
+    imageAlt: "Corporate production performance",
     productions: [
       { title: "Mirror Mirror", year: "2023", venue: "The Exyte Company" },
       {
