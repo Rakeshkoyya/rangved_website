@@ -12,7 +12,7 @@ if (typeof window !== "undefined") {
 const highlights = [
   { label: "4+ Years", subtitle: "Experience" },
   { label: "15+ Plays", subtitle: "Stage Performances" },
-  { label: "100+", subtitle: "Students Mentored" },
+  { label: "1000+", subtitle: "Students Mentored" },
 ];
 
 export default function FounderNew() {

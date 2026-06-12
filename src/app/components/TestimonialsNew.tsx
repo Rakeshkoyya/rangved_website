@@ -274,8 +274,8 @@ export default function TestimonialsNew() {
           </div>
           
           <h2 className="testimonials-heading text-5xl md:text-7xl font-bold text-[#2d1810] mb-6 font-[family-name:var(--font-playfair)] perspective-1000">
-            <span className="title-word inline-block">Voices </span>
-            <span className="title-word inline-block">of </span>
+            <span className="title-word inline-block mr-[0.25em]">Voices</span>
+            <span className="title-word inline-block mr-[0.25em]">of</span>
             <span className="title-word inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#e07b39] to-[#d4a853]">Transformation</span>
           </h2>
           
