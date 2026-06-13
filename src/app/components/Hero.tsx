@@ -116,18 +116,22 @@ export default function Hero() {
 
       {/* Content */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-        <div
+        <h1
           ref={titleRef}
           className="relative h-32 sm:h-40 md:h-48 w-full max-w-3xl mx-auto mb-8"
         >
+          <span className="sr-only">
+            Rangved — Event Management &amp; Performing Arts Company in
+            Hyderabad
+          </span>
           <Image
             src="/images/founder/rangved.png"
-            alt="Rangved"
+            alt="Rangved logo"
             fill
             className="object-contain"
             priority
           />
-        </div>
+        </h1>
 
         {/* Subtitle */}
         <p
