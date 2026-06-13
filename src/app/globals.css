@@ -78,6 +78,15 @@ html.lenis, html.lenis body {
   overflow: hidden;
 }
 
+/* Utility: hide scrollbar while keeping scroll functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
 }

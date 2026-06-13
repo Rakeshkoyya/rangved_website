@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -103,6 +103,33 @@ const listItem = {
 export default function LegacyTimeline() {
   const [active, setActive] = useState(0);
   const category = categories[active];
+  const tabsScrollRef = useRef<HTMLDivElement>(null);
+  const tabButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const [expandedVenue, setExpandedVenue] = useState<string | null>(null);
+
+  // Auto-scroll the active pill into view on mobile
+  useEffect(() => {
+    const container = tabsScrollRef.current;
+    const btn = tabButtonRefs.current[active];
+    if (!container || !btn) return;
+    // Directly set scrollLeft so only the tab strip scrolls, never the window
+    const containerCenter = container.offsetWidth / 2;
+    const btnCenter = btn.offsetLeft + btn.offsetWidth / 2;
+    container.scrollLeft = btnCenter - containerCenter;
+  }, [active]);
+
+  // Reset expanded venue whenever the category changes
+  useEffect(() => {
+    setExpandedVenue(null);
+  }, [active]);
+
+  // Collapse when clicking anywhere outside
+  useEffect(() => {
+    if (!expandedVenue) return;
+    const handler = () => setExpandedVenue(null);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
+  }, [expandedVenue]);
 
   return (
     <section
@@ -139,24 +166,30 @@ export default function LegacyTimeline() {
           </p>
         </motion.div>
 
-        {/* Tabs */}
-        <div className="mb-12 flex flex-wrap items-center justify-center gap-3">
-          {categories.map((c, i) => {
-            const isActive = i === active;
-            return (
-              <button
-                key={c.id}
-                onClick={() => setActive(i)}
-                className={`rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 cursor-pointer md:text-base ${
-                  isActive
-                    ? "bg-gradient-to-r from-[#e07b39] to-[#d4a853] text-[#1a1410] shadow-[0_0_30px_rgba(224,123,57,0.4)]"
-                    : "border border-[#f5e6d3]/15 bg-white/5 text-[#f5e6d3]/80 hover:border-[#e07b39]/50 hover:text-[#f5e6d3]"
-                }`}
-              >
-                {c.label}
-              </button>
-            );
-          })}
+        {/* Tabs — horizontal scroll strip on mobile, centered wrap on md+ */}
+        <div className="relative mb-12">
+          <div
+            ref={tabsScrollRef}
+            className="scrollbar-hide flex gap-2 overflow-x-auto px-6 pb-1 md:flex-wrap md:items-center md:justify-center md:gap-3 md:overflow-visible md:px-0 md:pb-0"
+          >
+            {categories.map((c, i) => {
+              const isActive = i === active;
+              return (
+                <button
+                  ref={(el) => { tabButtonRefs.current[i] = el; }}
+                  key={c.id}
+                  onClick={() => setActive(i)}
+                  className={`shrink-0 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 cursor-pointer md:px-6 md:py-3 md:text-base ${
+                    isActive
+                      ? "bg-gradient-to-r from-[#e07b39] to-[#d4a853] text-[#1a1410] shadow-[0_0_30px_rgba(224,123,57,0.4)]"
+                      : "border border-[#f5e6d3]/15 bg-white/5 text-[#f5e6d3]/80 hover:border-[#e07b39]/50 hover:text-[#f5e6d3]"
+                  }`}
+                >
+                  {c.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Content */}
@@ -181,12 +214,13 @@ export default function LegacyTimeline() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               </div>
-              <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-[#e07b39] opacity-40 blur-2xl" />
-              <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-[#d4a853] opacity-30 blur-2xl" />
+              {/* Decorative blobs — hidden on mobile to prevent horizontal overflow */}
+              <div className="hidden md:block absolute -right-6 -top-6 h-32 w-32 rounded-full bg-[#e07b39] opacity-40 blur-2xl" />
+              <div className="hidden md:block absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-[#d4a853] opacity-30 blur-2xl" />
             </div>
 
             {/* List side */}
-            <div>
+            <div className="min-w-0">
               <h3 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-[#f5e6d3] md:text-4xl">
                 {category.heading}
               </h3>
@@ -206,10 +240,38 @@ export default function LegacyTimeline() {
                       className="flex items-center justify-between gap-4 py-4"
                     >
                       <div className="min-w-0">
-                        <p className="truncate text-lg font-semibold text-[#f5e6d3] md:text-xl">
+                        <p
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedVenue(
+                              expandedVenue === `${category.id}-${p.title}`
+                                ? null
+                                : `${category.id}-${p.title}`
+                            );
+                          }}
+                          className={`text-lg font-semibold text-[#f5e6d3] cursor-pointer select-none transition-all duration-300 md:text-xl ${
+                            expandedVenue === `${category.id}-${p.title}`
+                              ? "whitespace-normal"
+                              : "truncate"
+                          }`}
+                        >
                           {p.title}
                         </p>
-                        <p className="mt-0.5 text-sm text-[#f5e6d3]/55">
+                        <p
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setExpandedVenue(
+                              expandedVenue === `${category.id}-${p.title}`
+                                ? null
+                                : `${category.id}-${p.title}`
+                            );
+                          }}
+                          className={`mt-0.5 text-sm text-[#f5e6d3]/55 cursor-pointer select-none transition-all duration-300 ${
+                            expandedVenue === `${category.id}-${p.title}`
+                              ? "whitespace-normal"
+                              : "truncate"
+                          }`}
+                        >
                           {p.venue}
                         </p>
                       </div>

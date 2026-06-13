@@ -301,7 +301,7 @@ export default function TestimonialsNew() {
                   ref={(el) => {
                     cardRefs.current[index] = el;
                   }}
-                  className="relative bg-gradient-to-br from-white to-[#fff9f0] rounded-3xl p-6 md:p-8 shadow-[0_10px_40px_rgba(224,123,57,0.15)] border border-[#e07b39]/20 min-h-[380px] flex flex-col group"
+                  className="relative bg-gradient-to-br from-white to-[#fff9f0] rounded-3xl p-6 md:p-8 shadow-[0_0_0_1px_rgba(224,123,57,0.1),0_4px_24px_rgba(224,123,57,0.12),0_16px_48px_rgba(212,168,83,0.1)] border border-[#e07b39]/20 min-h-[380px] flex flex-col group"
                 >
                   {/* Glassmorphism overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl pointer-events-none" />
@@ -353,7 +353,7 @@ export default function TestimonialsNew() {
           <div className="relative z-50 flex items-center justify-center gap-4 mt-12">
             <button
               onClick={prevSlide}
-              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white shadow-lg border border-[#e07b39]/20 flex items-center justify-center text-[#e07b39] hover:bg-[#e07b39] hover:text-white hover:scale-110 transition-all duration-300 cursor-pointer"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white shadow-[0_4px_20px_rgba(224,123,57,0.18)] border border-[#e07b39]/20 flex items-center justify-center text-[#e07b39] hover:bg-[#e07b39] hover:text-white hover:scale-110 transition-all duration-300 cursor-pointer"
               aria-label="Previous testimonial"
             >
               <ChevronLeft size={24} />
@@ -376,7 +376,7 @@ export default function TestimonialsNew() {
             
             <button
               onClick={nextSlide}
-              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white shadow-lg border border-[#e07b39]/20 flex items-center justify-center text-[#e07b39] hover:bg-[#e07b39] hover:text-white hover:scale-110 transition-all duration-300 cursor-pointer"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white shadow-[0_4px_20px_rgba(224,123,57,0.18)] border border-[#e07b39]/20 flex items-center justify-center text-[#e07b39] hover:bg-[#e07b39] hover:text-white hover:scale-110 transition-all duration-300 cursor-pointer"
               aria-label="Next testimonial"
             >
               <ChevronRight size={24} />
