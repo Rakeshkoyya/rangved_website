@@ -52,7 +52,7 @@ export default function WorkShowcase() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-gradient-to-b from-[#e8d5c4] to-[#fff9f0] py-24"
+      className="relative overflow-hidden bg-gradient-to-b from-[#e8d5c4] to-[#fff9f0] py-16 md:py-24"
       id="work"
     >
       {/* Decorative accents */}

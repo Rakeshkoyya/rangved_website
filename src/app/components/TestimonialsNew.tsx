@@ -241,7 +241,7 @@ export default function TestimonialsNew() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-32 overflow-hidden"
+      className="relative py-20 md:py-32 overflow-hidden"
       id="testimonials"
     >
       {/* Gradient Background */}

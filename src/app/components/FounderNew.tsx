@@ -147,7 +147,7 @@ export default function FounderNew() {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         {/* Section Heading */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 md:mb-12">
           <div className="founder-heading inline-block">
             <span className="text-[#e07b39] text-sm font-semibold tracking-widest uppercase mb-2 block">
               The Visionary
@@ -165,7 +165,7 @@ export default function FounderNew() {
           <div className="founder-content grid lg:grid-cols-[40%_60%] gap-8 lg:gap-10 p-6 md:p-8 lg:p-10">
             {/* Image Column */}
             <div ref={imageRef} className="relative">
-              <div className="founder-image-wrapper relative group">
+              <div className="founder-image-wrapper relative group max-w-[240px] mx-auto lg:max-w-none lg:mx-0">
                 {/* Glow effect */}
                 <div className="founder-image-glow absolute inset-0 bg-gradient-to-br from-[#e07b39] to-[#d4a853] rounded-2xl blur-2xl opacity-0 transition-opacity duration-500"></div>
                 
@@ -234,13 +234,6 @@ export default function FounderNew() {
                     Through Rangved, he brings together theatre, training, and experiential events to 
                     create impactful performances and transformative learning experiences.
                   </p>
-                </div>
-
-                <div className="founder-text mt-5 flex flex-wrap items-center gap-2 text-[#4a3428] bg-gradient-to-r from-[#e07b39]/5 to-[#d4a853]/5 p-3 rounded-xl border border-[#e07b39]/10">
-                  <span className="text-xl">🌍</span>
-                  <span className="text-sm md:text-base">
-                    Fluent in <strong>English, Hindi, Telugu</strong> • Based in Begumpet, Hyderabad
-                  </span>
                 </div>
               </div>
             </div>

@@ -134,7 +134,7 @@ export default function LegacyTimeline() {
   return (
     <section
       id="legacy"
-      className="relative overflow-hidden bg-[#1a1410] py-24 md:py-32"
+      className="relative overflow-hidden bg-[#1a1410] py-16 md:py-32"
     >
       {/* Ambient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a1410] via-[#2d1810] to-[#1a1410]" />

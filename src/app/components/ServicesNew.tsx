@@ -77,7 +77,7 @@ export default function ServicesNew() {
   return (
     <section
       ref={containerRef}
-      className="relative bg-gradient-to-b from-[#f5e6d3] via-[#fff9f0] to-[#fef8f0] py-20 md:py-32"
+      className="relative bg-gradient-to-b from-[#f5e6d3] via-[#fff9f0] to-[#fef8f0] py-16 md:py-32"
       id="services"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">

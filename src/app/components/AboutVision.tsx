@@ -52,7 +52,7 @@ export default function AboutVision() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-20 md:py-32 bg-gradient-to-br from-[#fff9f0] via-[#fef3e8] to-[#fff9f0] overflow-hidden"
+      className="relative py-16 md:py-32 bg-gradient-to-br from-[#fff9f0] via-[#fef3e8] to-[#fff9f0] overflow-hidden"
       id="about"
     >
       {/* Decorative background elements */}
@@ -68,12 +68,12 @@ export default function AboutVision() {
         </h2>
         
         {/* Subtitle */}
-        <p className="about-heading text-lg md:text-xl text-[#4a3428]/70 text-center max-w-3xl mx-auto mb-16 font-light">
+        <p className="about-heading text-lg md:text-xl text-[#4a3428]/70 text-center max-w-3xl mx-auto mb-10 md:mb-16 font-light">
           A creative performing arts and experiential events organization
         </p>
 
         {/* Main Content Card */}
-        <div className="about-card group relative bg-white rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] transition-all duration-500 border border-[#e07b39]/10 hover:border-[#e07b39]/20">
+        <div className="about-card group relative bg-white rounded-3xl p-6 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_60px_rgb(0,0,0,0.08)] transition-all duration-500 border border-[#e07b39]/10 hover:border-[#e07b39]/20">
           {/* Top accent line */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#e07b39] to-transparent rounded-t-3xl"></div>
           

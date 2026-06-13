@@ -89,7 +89,7 @@ export default function Events() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-gradient-to-br from-[#1a1410] via-[#2d1810] to-[#1a1410] py-24 md:py-32"
+      className="relative overflow-hidden bg-gradient-to-br from-[#1a1410] via-[#2d1810] to-[#1a1410] py-16 md:py-32"
       id="events"
     >
       {/* Ambient glows */}
@@ -127,7 +127,7 @@ export default function Events() {
           </p>
 
           {/* Services */}
-          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="mt-8 grid grid-cols-2 gap-3">
             {eventServices.map((service) => (
               <div
                 key={service}
@@ -152,7 +152,7 @@ export default function Events() {
 
         {/* Visual column — contained slideshow */}
         <div className="events-visual relative">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/10">
+          <div className="relative aspect-square lg:aspect-[4/5] overflow-hidden rounded-3xl shadow-2xl ring-1 ring-white/10">
             {backgroundImages.map((image, index) => (
               <div
                 key={image}
