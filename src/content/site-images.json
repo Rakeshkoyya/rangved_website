@@ -1,12 +1,12 @@
 {
   "hero": [
-    "/images/hero/1.JPG",
     "/images/hero/2.JPG",
     "/images/hero/3.PNG",
     "/images/hero/4.PNG",
     "/images/hero/5.PNG",
     "/images/hero/6.jpeg",
-    "/images/hero/7.jpeg"
+    "/images/hero/7.jpeg",
+    "/images/hero/fa21ba07.webp"
   ],
   "events": [
     "/images/events/1.jpeg",
