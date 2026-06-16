@@ -133,10 +133,8 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  icons: {
-    icon: siteImages.logo,
-    apple: siteImages.logo,
-  },
+  // Icons are provided via the file-based conventions in this directory:
+  // favicon.ico, icon.png and apple-icon.png (derived from the Rangved logo).
 };
 
 // Schema.org structured data (LocalBusiness + WebSite) for rich results & local SEO.
