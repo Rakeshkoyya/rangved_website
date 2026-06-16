@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import { siteImages } from "@/content/manifest";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -47,7 +48,7 @@ export default function Navigation() {
             <a href="#" className="flex flex-col items-start group">
               <div className="relative h-10 w-32 transition-transform duration-300 group-hover:scale-105">
                 <Image
-                  src="/images/founder/rangved.png"
+                  src={siteImages.logo}
                   alt="Rangved Logo"
                   fill
                   className="object-contain object-left"

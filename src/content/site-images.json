@@ -1,0 +1,31 @@
+{
+  "hero": [
+    "/images/hero/1.JPG",
+    "/images/hero/2.JPG",
+    "/images/hero/3.PNG",
+    "/images/hero/4.PNG",
+    "/images/hero/5.PNG",
+    "/images/hero/6.jpeg",
+    "/images/hero/7.jpeg"
+  ],
+  "events": [
+    "/images/events/1.jpeg",
+    "/images/events/2.png",
+    "/images/events/3.JPG",
+    "/images/events/4.JPG",
+    "/images/events/5.PNG",
+    "/images/events/6.jpg"
+  ],
+  "services": [
+    "/images/services/1.jpeg",
+    "/images/services/2.png",
+    "/images/services/5.PNG"
+  ],
+  "legacy": [
+    "/images/work_legacy/6.jpg",
+    "/images/work_legacy/4.JPG",
+    "/images/work_legacy/5.jpeg"
+  ],
+  "founder": "/images/founder/founder.jpg",
+  "logo": "/images/founder/rangved.png"
+}

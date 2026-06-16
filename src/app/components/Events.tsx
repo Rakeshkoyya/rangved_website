@@ -4,19 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { siteImages } from "@/content/manifest";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const backgroundImages = [
-  "/images/events/1.jpeg",
-  "/images/events/2.png",
-  "/images/events/3.JPG",
-  "/images/events/4.JPG",
-  "/images/events/5.PNG",
-  "/images/events/6.jpg",
-];
+const backgroundImages = siteImages.events;
 
 const eventServices = [
   "Wedding Events",

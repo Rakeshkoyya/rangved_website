@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { siteImages } from "@/content/manifest";
 
 const carouselSlides = [
   {
@@ -11,7 +12,7 @@ const carouselSlides = [
       "Comprehensive theatre-based training including acting, mime, street theatre, improvisation, storytelling, drama therapy-inspired activities, and expressive movement practices.",
     icon: "🎭",
     color: "from-[#e07b39] to-[#f0a060]",
-    image: "/images/services/1.jpeg",
+    image: siteImages.services[0],
     programs: [
       "Integrated School Curriculum",
       "Hobby Classes & Clubs",
@@ -27,7 +28,7 @@ const carouselSlides = [
       "Dynamic dance programs combining Western, Classical, Folk, Hiphop, Garba, Zumba and movement-based performance styles that encourage creativity, rhythm, Confidence.",
     icon: "💃",
     color: "from-[#d4a853] to-[#e5c578]",
-    image: "/images/services/2.png",
+    image: siteImages.services[1],
     programs: [
       "School Curriculum Programs",
       "Hobby & Club Sessions",
@@ -54,7 +55,7 @@ const carouselSlides = [
       },
     ],
     color: "from-[#c97856] to-[#e09570]",
-    image: "/images/services/5.PNG",
+    image: siteImages.services[2],
   },
 ];
 

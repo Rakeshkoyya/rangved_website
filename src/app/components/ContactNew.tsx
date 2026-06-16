@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Phone, Mail, MapPin, Sparkles } from "lucide-react";
 import Image from "next/image";
+import { siteImages } from "@/content/manifest";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -31,15 +32,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-const heroImages = [
-  "/images/hero/1.JPG",
-  "/images/hero/2.JPG",
-  "/images/hero/3.PNG",
-  "/images/hero/4.PNG",
-  "/images/hero/5.PNG",
-  "/images/hero/6.jpeg",
-  "/images/hero/7.jpeg",
-];
+const heroImages = siteImages.hero;
 
 export default function ContactNew() {
   const sectionRef = useRef<HTMLDivElement>(null);

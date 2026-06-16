@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
+import { siteImages } from "@/content/manifest";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -109,7 +110,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/hero/1.JPG",
+        url: siteImages.hero[0],
         alt: "Rangved — performing arts and events in Hyderabad",
       },
     ],
@@ -119,7 +120,7 @@ export const metadata: Metadata = {
     title:
       "Rangved | Event Management & Performing Arts Company in Hyderabad",
     description: DESCRIPTION,
-    images: ["/images/hero/1.JPG"],
+    images: [siteImages.hero[0]],
   },
   robots: {
     index: true,
@@ -133,8 +134,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/images/founder/rangved.png",
-    apple: "/images/founder/rangved.png",
+    icon: siteImages.logo,
+    apple: siteImages.logo,
   },
 };
 
@@ -148,8 +149,8 @@ const jsonLd = {
       name: "Rangved",
       alternateName: "Rangved Arts and Events",
       url: `${SITE_URL}/`,
-      logo: `${SITE_URL}/images/founder/rangved.png`,
-      image: `${SITE_URL}/images/hero/1.JPG`,
+      logo: `${SITE_URL}${siteImages.logo}`,
+      image: `${SITE_URL}${siteImages.hero[0]}`,
       description: DESCRIPTION,
       slogan: "Theatre, Events & Experiences That Inspire Change",
       email: "rangved00@gmail.com",
