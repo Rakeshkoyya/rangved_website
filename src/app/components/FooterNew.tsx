@@ -2,6 +2,7 @@
 
 import { Mail, Phone } from "lucide-react";
 import Image from "next/image";
+import { siteImages } from "@/content/manifest";
 
 export default function FooterNew() {
   const currentYear = new Date().getFullYear();
@@ -15,7 +16,7 @@ export default function FooterNew() {
             <div className="mb-4">
               <div className="relative h-16 w-48">
                 <Image
-                  src="/images/founder/rangved.png"
+                  src={siteImages.logo}
                   alt="Rangved Logo"
                   fill
                   className="object-contain object-left"

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
+import { siteImages } from "@/content/manifest";
 
 type Production = {
   title: string;
@@ -28,7 +29,7 @@ const categories: Category[] = [
     heading: "Corporate Productions",
     blurb:
       "Original stage productions brought to life with professional ensembles and immersive storytelling.",
-    image: "/images/work_legacy/6.jpg",
+    image: siteImages.legacy[0],
     imageAlt: "Corporate production performance",
     productions: [
       { title: "Mirror Mirror", year: "2023", venue: "The Exyte Company" },
@@ -45,7 +46,7 @@ const categories: Category[] = [
     heading: "School Productions",
     blurb:
       "Large-scale school productions that put hundreds of young performers centre stage.",
-    image: "/images/work_legacy/4.JPG",
+    image: siteImages.legacy[1],
     imageAlt: "School production performance",
     productions: [
       {
@@ -78,7 +79,7 @@ const categories: Category[] = [
     heading: "Dance Performances",
     blurb:
       "From classical traditions to contemporary moves — choreography across every style.",
-    image: "/images/work_legacy/5.jpeg",
+    image: siteImages.legacy[2],
     imageAlt: "Dance performance",
     styles: ["Classical", "Western", "Folk", "Hip-Hop", "Garba", "Zumba"],
   },
