@@ -18,6 +18,28 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Admin (/admin)
+
+The owner can manage site images at `/admin` (Hero gallery, Events, Services,
+Legacy timeline, Founder portrait, Logo). Editing stages changes in the browser;
+clicking **Publish changes** writes one commit to GitHub, which triggers Vercel's
+auto-deploy. Uploaded images are compressed to visually-lossless WebP before upload.
+
+All section image paths live in a single source of truth: `src/content/site-images.json`.
+
+Set these environment variables in Vercel (Project → Settings → Environment
+Variables) and locally in `.env.local` (see `.env.example`):
+
+| Variable | Value |
+| --- | --- |
+| `ADMIN_PASSWORD` | the login password (checked server-side) |
+| `ADMIN_SESSION_SECRET` | any long random string (signs the session cookie) |
+| `GITHUB_TOKEN` | fine-grained PAT with **Contents: Read and write** on `Rakeshkoyya/rangved_website` |
+| `GITHUB_REPO` | `Rakeshkoyya/rangved_website` |
+| `GITHUB_BRANCH` | `main` |
+
+Image edits go live ~1–2 minutes after publishing (once Vercel finishes deploying).
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
