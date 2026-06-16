@@ -41,12 +41,18 @@ export async function POST(request: NextRequest) {
   const newFiles: CommitFile[] = Array.isArray(body.newFiles) ? body.newFiles : [];
   const deletedPaths: string[] = Array.isArray(body.deletedPaths) ? body.deletedPaths : [];
 
+  const summary =
+    typeof body.summary === "string" && body.summary.trim()
+      ? body.summary.replace(/\s+/g, " ").trim().slice(0, 200)
+      : "update site images";
+  const message = `chore(admin): ${summary} (${new Date().toISOString()})`;
+
   try {
     const commitUrl = await commitChanges({
       repo,
       branch,
       token,
-      message: "chore(admin): update site images",
+      message,
       manifest: body.manifest,
       newFiles,
       deletedPaths,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { siteImages, flattenPaths, deletedPaths, type SiteImages } from "@/content/manifest";
+import { siteImages, flattenPaths, deletedPaths, summarizeChanges, type SiteImages } from "@/content/manifest";
 import { compressImage, hashBlob, blobToBase64 } from "@/lib/compressImage";
 import { SECTIONS, type SectionConfig } from "./sections.config";
 
@@ -71,6 +71,18 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
     }
   }
 
+  const [drag, setDrag] = useState<{ key: string; index: number } | null>(null);
+
+  function reorderGallery(cfg: SectionConfig, from: number, to: number) {
+    if (from === to) return;
+    setManifest((m) => {
+      const arr = [...(m[cfg.key] as string[])];
+      const [moved] = arr.splice(from, 1);
+      arr.splice(to, 0, moved);
+      return { ...m, [cfg.key]: arr };
+    });
+  }
+
   const dirty = JSON.stringify(manifest) !== JSON.stringify(original);
 
   async function publish() {
@@ -84,7 +96,12 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
       const res = await fetch("/api/admin/commit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ manifest, newFiles, deletedPaths: deletedPaths(original, manifest) }),
+        body: JSON.stringify({
+          manifest,
+          newFiles,
+          deletedPaths: deletedPaths(original, manifest),
+          summary: summarizeChanges(original, manifest),
+        }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
@@ -114,30 +131,49 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
           <h2 className="mb-4 text-lg font-semibold text-[#2d1810]">{cfg.title}</h2>
 
           {cfg.mode === "gallery" && (
-            <div className="flex flex-wrap gap-3">
-              {(manifest[cfg.key] as string[]).map((path) => (
-                <div key={path} className="relative h-28 w-28 overflow-hidden rounded-lg border">
-                  <img src={srcFor(path)} alt="" className="h-full w-full object-cover" />
-                  <button
-                    onClick={() => removeFromGallery(cfg, path)}
-                    className="absolute right-1 top-1 rounded-full bg-black/70 px-2 text-xs text-white"
-                    aria-label="Remove image"
+            <>
+              <p className="mb-2 text-xs text-[#8a7a6a]">
+                Drag images to reorder — the site shows them in this order.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {(manifest[cfg.key] as string[]).map((path, index) => (
+                  <div
+                    key={path}
+                    draggable
+                    onDragStart={() => setDrag({ key: cfg.key, index })}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (drag && drag.key === cfg.key) reorderGallery(cfg, drag.index, index);
+                      setDrag(null);
+                    }}
+                    onDragEnd={() => setDrag(null)}
+                    className={`relative h-28 w-28 cursor-move overflow-hidden rounded-lg border transition-opacity ${
+                      drag && drag.key === cfg.key && drag.index === index ? "opacity-40" : ""
+                    }`}
                   >
-                    ✕
-                  </button>
-                </div>
-              ))}
-              <label className="flex h-28 w-28 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-[#e07b39] text-sm text-[#e07b39]">
-                ＋ Add
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  className="hidden"
-                  onChange={(e) => e.target.files && addToGallery(cfg, e.target.files)}
-                />
-              </label>
-            </div>
+                    <img src={srcFor(path)} alt="" draggable={false} className="h-full w-full object-cover" />
+                    <button
+                      onClick={() => removeFromGallery(cfg, path)}
+                      className="absolute right-1 top-1 rounded-full bg-black/70 px-2 text-xs text-white"
+                      aria-label="Remove image"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                <label className="flex h-28 w-28 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-[#e07b39] text-sm text-[#e07b39]">
+                  ＋ Add
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => e.target.files && addToGallery(cfg, e.target.files)}
+                  />
+                </label>
+              </div>
+            </>
           )}
 
           {cfg.mode === "slots" && (

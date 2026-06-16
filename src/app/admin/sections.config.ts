@@ -1,7 +1,7 @@
 export type SectionMode = "gallery" | "slots" | "single";
 
 export type SectionConfig = {
-  key: "hero" | "events" | "services" | "legacy" | "founder" | "logo";
+  key: "hero" | "events" | "contact" | "services" | "legacy" | "founder" | "logo";
   title: string;
   mode: SectionMode;
   dir: string; // folder under /images for newly uploaded files
@@ -12,6 +12,7 @@ export type SectionConfig = {
 export const SECTIONS: SectionConfig[] = [
   { key: "hero", title: "Hero gallery", mode: "gallery", dir: "hero", compress: { maxDimension: 2400, quality: 0.82 } },
   { key: "events", title: "Events", mode: "gallery", dir: "events", compress: { maxDimension: 2000, quality: 0.82 } },
+  { key: "contact", title: "Get in Touch background", mode: "gallery", dir: "contact", compress: { maxDimension: 2400, quality: 0.82 } },
   {
     key: "services",
     title: "Services",

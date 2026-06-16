@@ -1,9 +1,16 @@
 import { describe, it, expect } from "vitest";
-import { validateManifest, flattenPaths, deletedPaths, type SiteImages } from "./manifest";
+import {
+  validateManifest,
+  flattenPaths,
+  deletedPaths,
+  summarizeChanges,
+  type SiteImages,
+} from "./manifest";
 
 const base: SiteImages = {
   hero: ["/images/hero/a.webp", "/images/hero/b.webp"],
   events: ["/images/events/c.webp"],
+  contact: ["/images/contact/d.webp"],
   services: ["/images/services/1.webp", "/images/services/2.webp", "/images/services/3.webp"],
   legacy: ["/images/work_legacy/1.webp", "/images/work_legacy/2.webp", "/images/work_legacy/3.webp"],
   founder: "/images/founder/f.webp",
@@ -42,6 +49,32 @@ describe("deletedPaths", () => {
     expect(deletedPaths(shared, next)).toEqual([]);
   });
   it("flattenPaths includes every section", () => {
-    expect(flattenPaths(base)).toHaveLength(2 + 1 + 3 + 3 + 1 + 1);
+    expect(flattenPaths(base)).toHaveLength(2 + 1 + 1 + 3 + 3 + 1 + 1);
+  });
+});
+
+describe("summarizeChanges", () => {
+  it("reports an added gallery image", () => {
+    const next: SiteImages = { ...base, hero: [...base.hero, "/images/hero/c.webp"] };
+    expect(summarizeChanges(base, next)).toBe("Hero +1");
+  });
+  it("reports a removed gallery image", () => {
+    const next: SiteImages = { ...base, hero: [base.hero[0]] };
+    expect(summarizeChanges(base, next)).toBe("Hero -1");
+  });
+  it("reports a pure reorder", () => {
+    const next: SiteImages = { ...base, hero: [base.hero[1], base.hero[0]] };
+    expect(summarizeChanges(base, next)).toBe("Hero reordered");
+  });
+  it("reports a replaced slot and a replaced single together", () => {
+    const next: SiteImages = {
+      ...base,
+      services: ["/images/services/NEW.webp", base.services[1], base.services[2]],
+      logo: "/images/founder/new-logo.webp",
+    };
+    expect(summarizeChanges(base, next)).toBe("Services replaced 1, Logo replaced");
+  });
+  it("falls back to a generic message when nothing changed", () => {
+    expect(summarizeChanges(base, base)).toBe("update site images");
   });
 });
