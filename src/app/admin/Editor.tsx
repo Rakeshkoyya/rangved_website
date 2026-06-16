@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { siteImages, flattenPaths, deletedPaths, summarizeChanges, type SiteImages } from "@/content/manifest";
 import { compressImage, hashBlob, blobToBase64 } from "@/lib/compressImage";
 import { SECTIONS, type SectionConfig } from "./sections.config";
+import PublishProgress, { PUBLISH_STEPS, type PublishPhase } from "./PublishProgress";
 
 type Pending = Record<string, string>; // webPath -> base64
 
@@ -11,15 +12,20 @@ function clone(m: SiteImages): SiteImages {
   return JSON.parse(JSON.stringify(m));
 }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 export default function Editor({ onLogout }: { onLogout: () => void }) {
-  const original = useMemo(() => siteImages, []);
+  const [original, setOriginal] = useState<SiteImages>(() => clone(siteImages));
   const [manifest, setManifest] = useState<SiteImages>(() => clone(siteImages));
   const [pending, setPending] = useState<Pending>({});
   const [busy, setBusy] = useState(false);
-  const [status, setStatus] = useState<{ kind: "idle" | "ok" | "error"; msg: string; url?: string }>({
-    kind: "idle",
-    msg: "",
-  });
+
+  const [drag, setDrag] = useState<{ key: string; index: number } | null>(null);
+
+  const [publishPhase, setPublishPhase] = useState<PublishPhase>("idle");
+  const [publishStep, setPublishStep] = useState(0);
+  const [commitUrl, setCommitUrl] = useState<string | undefined>();
+  const [publishError, setPublishError] = useState<string | undefined>();
 
   const srcFor = (path: string) => (pending[path] ? `data:image/webp;base64,${pending[path]}` : path);
 
@@ -71,8 +77,6 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
     }
   }
 
-  const [drag, setDrag] = useState<{ key: string; index: number } | null>(null);
-
   function reorderGallery(cfg: SectionConfig, from: number, to: number) {
     if (from === to) return;
     setManifest((m) => {
@@ -86,14 +90,26 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
   const dirty = JSON.stringify(manifest) !== JSON.stringify(original);
 
   async function publish() {
-    setBusy(true);
-    setStatus({ kind: "idle", msg: "Publishing…" });
+    setPublishError(undefined);
+    setCommitUrl(undefined);
+    setPublishStep(0);
+    setPublishPhase("running");
+
+    // Advance the cosmetic step animation on a timer, capped at the last step
+    // until the real request resolves.
+    let step = 0;
+    const timer = setInterval(() => {
+      step = Math.min(step + 1, PUBLISH_STEPS.length - 1);
+      setPublishStep(step);
+    }, 1100);
+
     try {
       const referenced = new Set(flattenPaths(manifest));
       const newFiles = Object.entries(pending)
         .filter(([path]) => referenced.has(path))
         .map(([path, base64]) => ({ path, base64 }));
-      const res = await fetch("/api/admin/commit", {
+
+      const request = fetch("/api/admin/commit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -102,18 +118,25 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
           deletedPaths: deletedPaths(original, manifest),
           summary: summarizeChanges(original, manifest),
         }),
+      }).then(async (res) => {
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        return data as { commitUrl?: string };
       });
-      const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
-      const msg = data.deployTriggered
-        ? "Committed — Vercel deploy triggered (~1–2 min)."
-        : "Committed ✓. No deploy hook set — trigger a deploy in Vercel (or set VERCEL_DEPLOY_HOOK_URL).";
-      setStatus({ kind: "ok", msg, url: data.commitUrl });
+
+      // Keep the animation visible for at least a moment, even if the API is fast.
+      const [data] = await Promise.all([request, sleep(2200)]);
+
+      clearInterval(timer);
+      setPublishStep(PUBLISH_STEPS.length); // mark all steps done
+      setCommitUrl(data.commitUrl);
+      setOriginal(clone(manifest)); // new baseline so the editor is no longer "dirty"
       setPending({});
+      setPublishPhase("done");
     } catch (e) {
-      setStatus({ kind: "error", msg: (e as Error).message });
-    } finally {
-      setBusy(false);
+      clearInterval(timer);
+      setPublishError((e as Error).message);
+      setPublishPhase("error");
     }
   }
 
@@ -219,32 +242,26 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
 
       <div className="fixed inset-x-0 bottom-0 border-t border-[#e0d3c4] bg-white/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <div className="text-sm">
-            {status.kind === "error" && <span className="text-red-600">{status.msg}</span>}
-            {status.kind === "ok" && (
-              <span className="text-green-700">
-                {status.msg}{" "}
-                {status.url && (
-                  <a href={status.url} target="_blank" rel="noreferrer" className="underline">
-                    view commit
-                  </a>
-                )}
-              </span>
-            )}
-            {status.kind === "idle" && status.msg && <span className="text-[#4a3428]">{status.msg}</span>}
-            {status.kind === "idle" && !status.msg && (
-              <span className="text-[#4a3428]">{dirty ? "Unpublished changes" : "No changes"}</span>
-            )}
-          </div>
+          <span className="text-sm text-[#4a3428]">
+            {dirty ? "You have unpublished changes" : "No changes"}
+          </span>
           <button
             onClick={publish}
-            disabled={busy || !dirty}
+            disabled={busy || !dirty || publishPhase === "running"}
             className="rounded-full bg-[#e07b39] px-6 py-2.5 font-semibold text-white disabled:opacity-40"
           >
-            {busy ? "Working…" : "Publish changes"}
+            Publish changes
           </button>
         </div>
       </div>
+
+      <PublishProgress
+        phase={publishPhase}
+        stepIndex={publishStep}
+        commitUrl={commitUrl}
+        error={publishError}
+        onClose={() => setPublishPhase("idle")}
+      />
     </div>
   );
 }
