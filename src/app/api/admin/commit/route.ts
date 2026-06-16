@@ -5,6 +5,22 @@ import { validateManifest } from "@/content/manifest";
 
 export const runtime = "nodejs";
 
+/**
+ * Commits made via the GitHub API don't reliably fire Vercel's push-webhook,
+ * so we explicitly kick a deploy with a Vercel Deploy Hook when one is set.
+ * Returns true if a deploy was triggered, false if no hook is configured or it failed.
+ */
+async function triggerDeploy(): Promise<boolean> {
+  const hook = process.env.VERCEL_DEPLOY_HOOK_URL || "";
+  if (!hook) return false;
+  try {
+    const res = await fetch(hook, { method: "POST" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   if (!verifySession(request.cookies.get(SESSION_COOKIE)?.value, Date.now())) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
@@ -35,7 +51,8 @@ export async function POST(request: NextRequest) {
       newFiles,
       deletedPaths,
     });
-    return NextResponse.json({ ok: true, commitUrl });
+    const deployTriggered = await triggerDeploy();
+    return NextResponse.json({ ok: true, commitUrl, deployTriggered });
   } catch (e) {
     return NextResponse.json({ ok: false, error: (e as Error).message }, { status: 502 });
   }

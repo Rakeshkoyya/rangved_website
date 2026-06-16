@@ -37,8 +37,19 @@ Variables) and locally in `.env.local` (see `.env.example`):
 | `GITHUB_TOKEN` | fine-grained PAT with **Contents: Read and write** on `Rakeshkoyya/rangved_website` |
 | `GITHUB_REPO` | `Rakeshkoyya/rangved_website` |
 | `GITHUB_BRANCH` | `main` |
+| `VERCEL_DEPLOY_HOOK_URL` | Vercel Deploy Hook for `main` (see below) — recommended |
 
 Image edits go live ~1–2 minutes after publishing (once Vercel finishes deploying).
+
+### Why the Deploy Hook is needed
+
+The admin publishes by creating a commit through the **GitHub API**. Commits made
+this way don't reliably trigger Vercel's push-webhook, so the new commit can land
+on `main` without starting a deploy. To fix this, create a **Deploy Hook** in Vercel
+(Project → Settings → Git → **Deploy Hooks**, branch `main`), copy its URL into the
+`VERCEL_DEPLOY_HOOK_URL` env var, and the admin will ping it after each publish to
+trigger the build. If the variable is unset, the commit still lands — you'd just
+have to redeploy manually from the Vercel dashboard.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 

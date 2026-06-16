@@ -88,7 +88,10 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
-      setStatus({ kind: "ok", msg: "Committed — Vercel is deploying (~1–2 min).", url: data.commitUrl });
+      const msg = data.deployTriggered
+        ? "Committed — Vercel deploy triggered (~1–2 min)."
+        : "Committed ✓. No deploy hook set — trigger a deploy in Vercel (or set VERCEL_DEPLOY_HOOK_URL).";
+      setStatus({ kind: "ok", msg, url: data.commitUrl });
       setPending({});
     } catch (e) {
       setStatus({ kind: "error", msg: (e as Error).message });
