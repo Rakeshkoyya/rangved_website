@@ -32,7 +32,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-const heroImages = siteImages.hero;
+const bgImages = siteImages.contact;
 
 export default function ContactNew() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -42,7 +42,7 @@ export default function ContactNew() {
   // Background slideshow with fade effect
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % heroImages.length);
+      setCurrentImage((prev) => (prev + 1) % bgImages.length);
     }, 2000);
 
     return () => clearInterval(interval);
@@ -154,7 +154,7 @@ export default function ContactNew() {
     >
       {/* Background Image Slideshow */}
       <div className="absolute inset-0">
-        {heroImages.map((image, index) => (
+        {bgImages.map((image, index) => (
           <div
             key={index}
             ref={(el) => {
