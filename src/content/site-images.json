@@ -1,22 +1,24 @@
 {
   "hero": [
     "/images/hero/5.PNG",
-    "/images/hero/6.jpeg",
-    "/images/hero/fa21ba07.webp",
-    "/images/hero/febb72ac.webp",
-    "/images/hero/96bc5ab3.webp"
+    "/images/hero/860bc08b.webp",
+    "/images/hero/6d00bb8d.webp",
+    "/images/hero/46d548b0.webp",
+    "/images/hero/9a52598b.webp",
+    "/images/hero/a294bb91.webp"
   ],
   "events": [
+    "/images/events/d95640aa.webp",
     "/images/events/2.png",
-    "/images/events/4.JPG",
-    "/images/events/6.jpg"
+    "/images/events/ccf2902f.webp",
+    "/images/events/4.JPG"
   ],
   "contact": [
-    "/images/contact/1153e797.webp",
-    "/images/contact/f3db9ce5.webp",
+    "/images/contact/f0a175fa.webp",
     "/images/contact/af9fb438.webp",
-    "/images/contact/d683c0c7.webp",
-    "/images/contact/dd5f2ef4.webp"
+    "/images/contact/dd5f2ef4.webp",
+    "/images/contact/4f5fa393.webp",
+    "/images/contact/d5991932.webp"
   ],
   "services": [
     "/images/services/1.jpeg",
