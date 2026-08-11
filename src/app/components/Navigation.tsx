@@ -10,10 +10,9 @@ const navLinks = [
   { label: "About", href: "#about" },
   { label: "Events", href: "#events" },
   { label: "Services", href: "#services" },
-  { label: "Work", href: "#work" },
-  { label: "Legacy", href: "#legacy" },
-  { label: "Founder", href: "#founder" },
+  { label: "Our Work", href: "#work" },
   { label: "Testimonials", href: "#testimonials" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Navigation() {
@@ -56,7 +55,7 @@ export default function Navigation() {
                 />
               </div>
               <span className={`text-[10px] uppercase tracking-[0.25em] ml-0.5 transition-colors duration-500 ${scrolled ? "text-[#e07b39]" : "text-white/70"}`}>
-              Arts and Events
+              Events and Experiences
               </span>
             </a>
 

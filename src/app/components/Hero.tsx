@@ -129,10 +129,20 @@ export default function Hero() {
         {/* Subtitle */}
         <p
           ref={subtitleRef}
-          className="text-xl md:text-3xl text-[#f5e6d3] max-w-4xl mx-auto mb-12 leading-relaxed font-light drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+          className="text-xl md:text-3xl text-[#f5e6d3] max-w-4xl mx-auto mb-4 leading-relaxed font-light drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
         >
-          Performing Arts • Events • Expression • Transformation
+          Weddings • Corporate • Social • Cultural Events
         </p>
+
+        {/* Supporting line */}
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1 }}
+          className="text-base md:text-xl text-[#f5e6d3]/85 max-w-3xl mx-auto mb-12 leading-relaxed font-light tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+        >
+          Professionally Managed • Creatively Crafted • Memorable by Design
+        </motion.p>
 
         {/* CTA Buttons */}
         <motion.div
@@ -145,13 +155,13 @@ export default function Hero() {
             href="#work"
             className="px-8 py-4 bg-[#e07b39] text-white font-semibold rounded-full hover:bg-[#c06020] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-base"
           >
-            Explore Our Work
+            Explore Our Events
           </a>
           <a
             href="#contact"
             className="px-8 py-4 border-2 border-white/80 text-white font-medium rounded-full hover:bg-white hover:text-[#1a1410] transition-all duration-300 hover:-translate-y-1 text-base backdrop-blur-sm"
           >
-            Partner With Us
+            Plan Your Event
           </a>
         </motion.div>
       </div>
