@@ -12,7 +12,6 @@ const navLinks = [
   { label: "Services", href: "#services" },
   { label: "Our Work", href: "#work" },
   { label: "Testimonials", href: "#testimonials" },
-  { label: "Contact", href: "#contact" },
 ];
 
 export default function Navigation() {

@@ -143,7 +143,7 @@ export default function FrameworkImpact() {
   return (
     <section
       ref={sectionRef}
-      className="py-16 md:py-24 bg-gradient-to-b from-[#f5e6d3] to-[#e8d5c4]"
+      className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-b from-[#f5e6d3] to-[#e8d5c4]"
       id="impact"
     >
       {/* Impact Section */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,6 +13,8 @@ if (typeof window !== "undefined") {
 }
 
 const heroImages = siteImages.hero;
+
+const TAGLINE = ["Weddings", "Corporate", "Social", "Cultural Events"];
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -80,7 +82,7 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1a1410]"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1a1410] py-28 sm:py-32"
       id="hero"
     >
       {/* Background slideshow */}
@@ -108,10 +110,10 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+      <div className="relative z-10 w-full min-w-0 max-w-6xl mx-auto px-6 text-center">
         <h1
           ref={titleRef}
-          className="relative h-32 sm:h-40 md:h-48 w-full max-w-3xl mx-auto mb-8"
+          className="relative h-24 sm:h-36 md:h-48 w-full max-w-xs sm:max-w-xl md:max-w-3xl mx-auto mb-6 sm:mb-8"
         >
           <span className="sr-only">
             Rangved — Event Management &amp; Performing Arts Company in
@@ -126,23 +128,52 @@ export default function Hero() {
           />
         </h1>
 
-        {/* Subtitle */}
+        {/* Tagline — primary line, display serif.
+            Each item stays unbroken; <wbr /> gives the browser a break
+            opportunity between items so narrow screens wrap cleanly. */}
         <p
           ref={subtitleRef}
-          className="text-xl md:text-3xl text-[#f5e6d3] max-w-4xl mx-auto mb-4 leading-relaxed font-light drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+          className="font-[family-name:var(--font-playfair)] text-[1.375rem] sm:text-3xl md:text-[clamp(1.875rem,3.4vw,2.75rem)] leading-[1.25] sm:leading-[1.15] text-[#fff9f0] max-w-4xl md:max-w-none mx-auto mb-5 sm:mb-6 md:mb-7 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)]"
         >
-          Weddings • Corporate • Social • Cultural Events
+          {TAGLINE.map((item, index) => (
+            <Fragment key={item}>
+              <span className="whitespace-nowrap">
+                {item}
+                {index < TAGLINE.length - 1 && (
+                  <span
+                    aria-hidden="true"
+                    className="mx-2 md:mx-3 align-middle text-[0.5em] text-[#d4a853]"
+                  >
+                    &#9670;
+                  </span>
+                )}
+              </span>
+              {index < TAGLINE.length - 1 && <wbr />}
+            </Fragment>
+          ))}
         </p>
 
-        {/* Supporting line */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
+        {/* Supporting sub-tag — quieter, spaced small caps.
+            Held to a single line from md up via a fluid clamped size. */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1 }}
-          className="text-base md:text-xl text-[#f5e6d3]/85 max-w-3xl mx-auto mb-12 leading-relaxed font-light tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+          className="flex items-center justify-center gap-3 md:gap-5 mb-10 sm:mb-12"
         >
-          Professionally Managed • Creatively Crafted • Memorable by Design
-        </motion.p>
+          <span
+            aria-hidden="true"
+            className="hidden md:block h-px w-12 lg:w-20 shrink-0 bg-gradient-to-r from-transparent to-[#d4a853]/60"
+          />
+          <p className="min-w-0 max-w-xs sm:max-w-md text-[10px] sm:text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.22em] leading-[1.9] text-[#f5e6d3]/75 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)] md:max-w-none md:whitespace-nowrap md:text-[clamp(0.6875rem,1.05vw,0.875rem)] md:tracking-[0.28em] md:leading-relaxed md:-mr-[0.28em]">
+            Professionally Managed &middot; Creatively Crafted &middot; Memorable
+            by Design
+          </p>
+          <span
+            aria-hidden="true"
+            className="hidden md:block h-px w-12 lg:w-20 shrink-0 bg-gradient-to-l from-transparent to-[#d4a853]/60"
+          />
+        </motion.div>
 
         {/* CTA Buttons */}
         <motion.div
