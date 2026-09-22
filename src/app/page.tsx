@@ -25,7 +25,7 @@ export default function Home() {
         <WorkShowcase />
         <LegacyTimeline />
         <FrameworkImpact />
-        <FounderNew />
+        {/* <FounderNew /> */}
         <TestimonialsNew />
         <ContactNew />
       </main>
