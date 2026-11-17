@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE, verifySession } from "@/lib/auth";
-import { commitChanges, type CommitFile } from "@/lib/github";
+import { commitChanges, sanitizeNewFiles } from "@/lib/github";
 import { validateManifest } from "@/content/manifest";
 
 export const runtime = "nodejs";
@@ -38,8 +38,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Server not configured" }, { status: 500 });
   }
 
-  const newFiles: CommitFile[] = Array.isArray(body.newFiles) ? body.newFiles : [];
-  const deletedPaths: string[] = Array.isArray(body.deletedPaths) ? body.deletedPaths : [];
+  const newFiles = sanitizeNewFiles(body.newFiles);
+  const deletedPaths: string[] = Array.isArray(body.deletedPaths)
+    ? body.deletedPaths.filter((p: unknown): p is string => typeof p === "string")
+    : [];
 
   const summary =
     typeof body.summary === "string" && body.summary.trim()

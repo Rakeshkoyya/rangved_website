@@ -1,3 +1,5 @@
+import { isSafeImagePath } from "../content/work";
+
 const API = "https://api.github.com";
 
 export type CommitFile = { path: string; base64: string }; // path is a web path like /images/hero/x.webp
@@ -10,8 +12,22 @@ export function webPathToRepoPath(webPath: string): string {
 
 export function buildDeletionEntries(deletedWebPaths: string[]): TreeEntry[] {
   return deletedWebPaths
-    .filter((p) => p.startsWith("/images/"))
+    .filter((p) => isSafeImagePath(p))
     .map((p) => ({ path: webPathToRepoPath(p), mode: "100644" as const, type: "blob" as const, sha: null }));
+}
+
+/** Keeps only uploads that are .webp files under /images/ (what the admin's compressor produces). */
+export function sanitizeNewFiles(value: unknown): CommitFile[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (f): f is CommitFile =>
+      !!f &&
+      typeof f === "object" &&
+      typeof (f as CommitFile).path === "string" &&
+      typeof (f as CommitFile).base64 === "string" &&
+      isSafeImagePath((f as CommitFile).path) &&
+      (f as CommitFile).path.endsWith(".webp")
+  );
 }
 
 async function gh(token: string, path: string, init?: RequestInit) {

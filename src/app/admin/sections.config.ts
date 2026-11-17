@@ -1,7 +1,7 @@
 export type SectionMode = "gallery" | "slots" | "single";
 
 export type SectionConfig = {
-  key: "hero" | "events" | "contact" | "services" | "legacy" | "founder" | "logo";
+  key: "hero" | "contact" | "services" | "legacy" | "founder" | "logo";
   title: string;
   mode: SectionMode;
   dir: string; // folder under /images for newly uploaded files
@@ -11,11 +11,10 @@ export type SectionConfig = {
 
 export const SECTIONS: SectionConfig[] = [
   { key: "hero", title: "Hero gallery", mode: "gallery", dir: "hero", compress: { maxDimension: 2400, quality: 0.82 } },
-  { key: "events", title: "Events", mode: "gallery", dir: "events", compress: { maxDimension: 2000, quality: 0.82 } },
   { key: "contact", title: "Get in Touch background", mode: "gallery", dir: "contact", compress: { maxDimension: 2400, quality: 0.82 } },
   {
     key: "services",
-    title: "Services",
+    title: "Services (section hidden on site)",
     mode: "slots",
     dir: "services",
     slotLabels: ["Theatre Arts", "Dance", "Annual Day & Corporate"],
@@ -23,7 +22,7 @@ export const SECTIONS: SectionConfig[] = [
   },
   {
     key: "legacy",
-    title: "Legacy timeline",
+    title: "Legacy timeline (section hidden on site)",
     mode: "slots",
     dir: "work_legacy",
     slotLabels: ["Corporate Productions", "School Productions", "Dance Performances"],
@@ -32,3 +31,6 @@ export const SECTIONS: SectionConfig[] = [
   { key: "founder", title: "Founder portrait", mode: "single", dir: "founder", compress: { maxDimension: 1400, quality: 0.85 } },
   { key: "logo", title: "Logo", mode: "single", dir: "founder", compress: { maxDimension: 800, quality: 0.95 } },
 ];
+
+/** Uploads for Events / Our Work categories land in /images/work/<category-id>/. */
+export const WORK_COMPRESS = { maxDimension: 2000, quality: 0.82 };

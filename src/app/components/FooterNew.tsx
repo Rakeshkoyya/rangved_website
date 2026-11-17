@@ -2,6 +2,7 @@
 
 import { Mail, Phone } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { siteImages } from "@/content/manifest";
 
 export default function FooterNew() {
@@ -79,52 +80,44 @@ export default function FooterNew() {
             </h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#about"
+                <Link
+                  href="/#about"
                   className="text-[#4a3428] text-lg hover:text-[#e07b39] transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#services"
+                <Link
+                  href="/#events"
                   className="text-[#4a3428] text-lg hover:text-[#e07b39] transition-colors"
                 >
-                  Services
-                </a>
+                  Events
+                </Link>
               </li>
               <li>
-                <a
-                  href="#work"
+                <Link
+                  href="/our-work"
                   className="text-[#4a3428] text-lg hover:text-[#e07b39] transition-colors"
                 >
                   Our Work
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#legacy"
+                <Link
+                  href="/#testimonials"
                   className="text-[#4a3428] text-lg hover:text-[#e07b39] transition-colors"
                 >
-                  Legacy
-                </a>
+                  Testimonials
+                </Link>
               </li>
               <li>
-                <a
-                  href="#founder"
-                  className="text-[#4a3428] text-lg hover:text-[#e07b39] transition-colors"
-                >
-                  Founder
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#contact"
+                <Link
+                  href="/#contact"
                   className="text-[#4a3428] text-lg hover:text-[#e07b39] transition-colors"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

@@ -3,13 +3,26 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Quote, Star, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { useHorizontalWheel } from "../hooks/useHorizontalWheel";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const testimonials = [
+type Testimonial = {
+  name: string;
+  role: string;
+  year: string;
+  text: string;
+  rating: number;
+  highlight?: string;
+};
+
+const AUTOPLAY_MS = 6000;
+const SWIPE_THRESHOLD_PX = 50;
+
+const testimonials: Testimonial[] = [
   {
     name: "Principal, Gitanjali Group of Schools",
     role: "Principal",
@@ -19,48 +32,26 @@ const testimonials = [
     highlight: "Featured",
   },
   {
-    name: "Nithya",
-    role: "10th Student",
-    year: "2025",
-    text: "Thank you, Rithik sir, for your incredible guidance. We shine today because of you — excited to learn and perform more with you!",
-    rating: 5,
-    highlight: "Student Voice",
-  },
-  {
-    name: "Chairman, Walker Town Academy",
-    role: "Chairman",
-    year: "2024",
-    text: "An outstanding mentor! Your ability to train our young students so effectively in a short time is remarkable. We look forward to many more summer camps and workshops together.",
-    rating: 5,
-    highlight: "Partnership",
-  },
-  {
     name: "Event Organiser",
     role: "Event Organiser",
     year: "2025",
     text: "Heartfelt thanks to Rithik for his detailed guidance and direction. Applause to our young artists — your hard work truly shone!",
     rating: 5,
   },
+  // PLACEHOLDER — sample copy, replace with real client feedback before publishing.
   {
-    name: "Educator",
-    role: "Educator",
+    name: "Bride's Family",
+    role: "Wedding Celebration",
     year: "2025",
-    text: "Dear Rithik Sir, Thank you for your guidance, trust, and encouragement. This journey has been truly enriching, and we'll always value the lessons and memories gained.",
+    text: "From the sangeet to the reception, every detail was handled beautifully. We could simply enjoy our day while the Rangved team took care of everything.",
     rating: 5,
   },
+  // PLACEHOLDER — sample copy, replace with real client feedback before publishing.
   {
-    name: "Amayra",
-    role: "Grade 6th",
-    year: "2024",
-    text: "Dear Sir, Thank you for helping me overcome my stage fear. I'll truly miss dramatics — you were a teacher and a friend.",
-    rating: 5,
-    highlight: "Impact Story",
-  },
-  {
-    name: "Parent",
-    role: "Parent",
-    year: "2023",
-    text: "Thank you, sir, for training my child so well. He would excitedly share his learnings every day — truly grateful for your support.",
+    name: "HR Manager",
+    role: "Corporate Annual Meet",
+    year: "2025",
+    text: "Professional, punctual and full of fresh ideas. Our annual meet was the most engaging one yet — the team kept every guest involved from start to finish.",
     rating: 5,
   },
 ];
@@ -72,6 +63,7 @@ export default function TestimonialsNew() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [stageHeight, setStageHeight] = useState(420);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const stageRef = useRef<HTMLDivElement>(null);
 
   // Track viewport so side previews only show on larger screens
   useEffect(() => {
@@ -222,13 +214,13 @@ export default function TestimonialsNew() {
     return () => ctx.revert();
   }, []);
 
-  // Auto-advance carousel
+  // Auto-advance every 6s; depends on currentSlide so a swipe or click restarts the countdown.
   useEffect(() => {
-    const interval = setInterval(() => {
+    const id = setTimeout(() => {
       setCurrentSlide((prev) => (prev + 1) % testimonials.length);
-    }, 6000); // Auto-advance every 6 seconds
-    return () => clearInterval(interval);
-  }, []);
+    }, AUTOPLAY_MS);
+    return () => clearTimeout(id);
+  }, [currentSlide]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % testimonials.length);
@@ -237,6 +229,30 @@ export default function TestimonialsNew() {
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
+
+  // Touch swipe moves the coverflow; horizontal trackpad / shift+wheel is handled by the hook below.
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    let touchStartX: number | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      if (touchStartX === null) return;
+      const delta = e.changedTouches[0].clientX - touchStartX;
+      touchStartX = null;
+      if (Math.abs(delta) > SWIPE_THRESHOLD_PX) (delta < 0 ? nextSlide : prevSlide)();
+    };
+    stage.addEventListener("touchstart", onTouchStart, { passive: true });
+    stage.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      stage.removeEventListener("touchstart", onTouchStart);
+      stage.removeEventListener("touchend", onTouchEnd);
+    };
+  }, []);
+
+  useHorizontalWheel(stageRef, (direction) => (direction > 0 ? nextSlide() : prevSlide()));
 
   return (
     <section
@@ -265,30 +281,22 @@ export default function TestimonialsNew() {
       <div className="relative max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="text-[#d4a853] animate-pulse" size={20} />
-            <span className="text-[#e07b39] text-sm tracking-[0.3em] uppercase font-semibold">
-              Success Stories
-            </span>
-            <Sparkles className="text-[#d4a853] animate-pulse" size={20} />
-          </div>
-          
           <h2 className="testimonials-heading text-5xl md:text-7xl font-bold text-[#2d1810] mb-6 font-[family-name:var(--font-playfair)] perspective-1000">
-            <span className="title-word inline-block mr-[0.25em]">Voices</span>
-            <span className="title-word inline-block mr-[0.25em]">of</span>
-            <span className="title-word inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#e07b39] to-[#d4a853]">Transformation</span>
+            <span className="title-word inline-block mr-[0.25em]">Success</span>
+            <span className="title-word inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#e07b39] to-[#d4a853]">Stories</span>
           </h2>
-          
+
           <p className="testimonials-subtitle text-[#4a3428]/70 text-lg md:text-xl max-w-2xl mx-auto">
-            Real stories from students, educators, and parents who experienced
-            the transformative power of creative learning
+            What schools, organisers and families say about the events we have
+            planned, produced and brought to life together
           </p>
         </div>
 
         {/* Coverflow carousel — center card on top, neighbours faint behind */}
         <div className="carousel-container relative">
           <div
-            className="relative transition-[height] duration-700 ease-out"
+            ref={stageRef}
+            className="relative touch-pan-y select-none transition-[height] duration-700 ease-out"
             style={{ height: stageHeight }}
           >
             {testimonials.map((testimonial, index) => (

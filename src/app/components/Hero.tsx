@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { siteImages } from "@/content/manifest";
 
 if (typeof window !== "undefined") {
@@ -182,12 +183,12 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 1.2 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12"
         >
-          <a
-            href="#work"
+          <Link
+            href="/our-work"
             className="px-8 py-4 bg-[#e07b39] text-white font-semibold rounded-full hover:bg-[#c06020] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 text-base"
           >
             Explore Our Events
-          </a>
+          </Link>
           <a
             href="#contact"
             className="px-8 py-4 border-2 border-white/80 text-white font-medium rounded-full hover:bg-white hover:text-[#1a1410] transition-all duration-300 hover:-translate-y-1 text-base backdrop-blur-sm"
