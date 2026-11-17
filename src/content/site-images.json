@@ -7,12 +7,6 @@
     "/images/hero/9a52598b.webp",
     "/images/hero/a294bb91.webp"
   ],
-  "events": [
-    "/images/events/d95640aa.webp",
-    "/images/events/2.png",
-    "/images/events/ccf2902f.webp",
-    "/images/events/4.JPG"
-  ],
   "contact": [
     "/images/contact/f0a175fa.webp",
     "/images/contact/af9fb438.webp",
@@ -31,5 +25,89 @@
     "/images/work_legacy/5.jpeg"
   ],
   "founder": "/images/founder/founder.jpg",
-  "logo": "/images/founder/rangved.png"
+  "logo": "/images/founder/rangved.png",
+  "workCategories": [
+    {
+      "id": "wedding-events",
+      "title": "Wedding Events",
+      "description": "From sangeet nights to the grand reception, we design and run wedding celebrations end to end — décor, stage, entertainment and on-the-day coordination — so your family can simply enjoy the moment.",
+      "images": [
+        "/images/events/d95640aa.webp",
+        "/images/services/6.jpg",
+        "/images/events/7.PNG",
+        "/images/services/3.JPG"
+      ]
+    },
+    {
+      "id": "corporate-events",
+      "title": "Corporate Events",
+      "description": "Annual meets, product launches, award nights and team-building days, planned with polish and delivered on schedule. Engaging formats that reflect your brand and keep every guest involved.",
+      "images": [
+        "/images/events/2.png",
+        "/images/services/3.JPG",
+        "/images/services/4.JPG"
+      ]
+    },
+    {
+      "id": "educational-events",
+      "title": "Educational Events",
+      "description": "Annual days, cultural fests, sports days and graduation ceremonies for schools and colleges — scripted, choreographed and stage-managed so every student gets their moment in the spotlight.",
+      "images": [
+        "/images/events/ccf2902f.webp",
+        "/images/services/1.jpeg",
+        "/images/services/5.PNG",
+        "/images/events/4.JPG"
+      ]
+    },
+    {
+      "id": "social-community-gatherings",
+      "title": "Social & Community Gatherings",
+      "description": "Festivals, community celebrations, society events and family get-togethers, organised to bring people together with warm hospitality and lively entertainment.",
+      "images": [
+        "/images/events/7.PNG",
+        "/images/events/d95640aa.webp",
+        "/images/services/2.png"
+      ]
+    },
+    {
+      "id": "housewarming-ceremonies",
+      "title": "Housewarming Ceremonies",
+      "description": "Traditional griha pravesh rituals and modern housewarming parties, handled with care — décor, pooja arrangements, catering coordination and guest management.",
+      "images": [
+        "/images/services/1.jpeg",
+        "/images/events/2.png",
+        "/images/services/7.PNG"
+      ]
+    },
+    {
+      "id": "baby-shower-ceremonies",
+      "title": "Baby Shower Ceremonies",
+      "description": "Seemantham, godh bharai and baby shower celebrations with thoughtful themes, elegant décor and fun moments for the family to cherish.",
+      "images": [
+        "/images/services/2.png",
+        "/images/events/ccf2902f.webp",
+        "/images/services/4.JPG"
+      ]
+    },
+    {
+      "id": "cultural-entertainment-events",
+      "title": "Cultural & Entertainment Events",
+      "description": "Cultural evenings, live performances and entertainment showcases with professional staging, sound and lighting that leave audiences talking.",
+      "images": [
+        "/images/events/4.JPG",
+        "/images/services/7.PNG",
+        "/images/services/5.PNG"
+      ]
+    },
+    {
+      "id": "stage-performance-events",
+      "title": "Stage & Performance Events",
+      "description": "Stage design, choreography and full show production for performances of every scale — from rehearsals to the final curtain call.",
+      "images": [
+        "/images/services/5.PNG",
+        "/images/services/6.jpg",
+        "/images/events/4.JPG"
+      ]
+    }
+  ]
 }

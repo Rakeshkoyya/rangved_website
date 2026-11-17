@@ -4,22 +4,29 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { siteImages } from "@/content/manifest";
 
+// Hash links are rooted at "/" so they also work from the /our-work pages.
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Events", href: "#events" },
-  { label: "Services", href: "#services" },
-  { label: "Our Work", href: "#work" },
-  { label: "Testimonials", href: "#testimonials" },
+  { label: "About", href: "/#about" },
+  { label: "Events", href: "/#events" },
+  { label: "Our Work", href: "/our-work" },
+  { label: "Testimonials", href: "/#testimonials" },
 ];
 
-export default function Navigation() {
-  const [scrolled, setScrolled] = useState(false);
+type Props = {
+  /** Always use the solid (light) bar — for pages without a dark hero behind the nav. */
+  isSolid?: boolean;
+};
+
+export default function Navigation({ isSolid = false }: Props) {
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const scrolled = isSolid || hasScrolled;
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
+    const handleScroll = () => setHasScrolled(window.scrollY > 80);
     handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -43,7 +50,7 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <a href="#" className="flex flex-col items-start group">
+            <Link href="/" className="flex flex-col items-start group">
               <div className="relative h-10 w-32 transition-transform duration-300 group-hover:scale-105">
                 <Image
                   src={siteImages.logo}
@@ -56,12 +63,12 @@ export default function Navigation() {
               <span className={`text-[10px] uppercase tracking-[0.25em] ml-0.5 transition-colors duration-500 ${scrolled ? "text-[#e07b39]" : "text-white/70"}`}>
               Events and Experiences
               </span>
-            </a>
+            </Link>
 
             {/* Desktop Nav */}
             <div className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   className={`relative text-sm transition-colors duration-300 py-2 group hover:text-[#e07b39] ${
@@ -70,14 +77,14 @@ export default function Navigation() {
                 >
                   {link.label}
                   <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#e07b39] transition-all duration-300 group-hover:w-full" />
-                </a>
+                </Link>
               ))}
-              <a
-                href="#contact"
+              <Link
+                href="/#contact"
                 className="px-5 py-2.5 bg-gradient-to-r from-[#e07b39] to-[#f0a060] text-white text-sm font-medium rounded-full hover:shadow-lg hover:shadow-[#e07b39]/20 transition-all duration-300 hover:-translate-y-0.5"
               >
                 Get in Touch
-              </a>
+              </Link>
             </div>
 
             {/* Mobile Toggle */}
@@ -123,13 +130,13 @@ export default function Navigation() {
                   {link.label}
                 </motion.a>
               ))}
-              <a
-                href="#contact"
+              <Link
+                href="/#contact"
                 onClick={() => setMobileOpen(false)}
                 className="mt-4 px-6 py-3 bg-gradient-to-r from-[#e07b39] to-[#f0a060] text-white text-center font-medium rounded-full"
               >
                 Get in Touch
-              </a>
+              </Link>
             </div>
           </motion.div>
         )}

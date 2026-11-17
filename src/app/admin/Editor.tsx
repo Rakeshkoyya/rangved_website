@@ -1,10 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { siteImages, flattenPaths, deletedPaths, summarizeChanges, type SiteImages } from "@/content/manifest";
+import {
+  siteImages,
+  flattenPaths,
+  deletedPaths,
+  summarizeChanges,
+  type SiteImages,
+  type WorkCategory,
+} from "@/content/manifest";
+import { validateWorkCategories } from "@/content/work";
 import { compressImage, hashBlob, blobToBase64 } from "@/lib/compressImage";
-import { SECTIONS, type SectionConfig } from "./sections.config";
+import { SECTIONS, WORK_COMPRESS, type SectionConfig } from "./sections.config";
 import PublishProgress, { PUBLISH_STEPS, type PublishPhase } from "./PublishProgress";
+import WorkCategoriesEditor from "./WorkCategoriesEditor";
 
 type Pending = Record<string, string>; // webPath -> base64
 
@@ -29,7 +38,7 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
 
   const srcFor = (path: string) => (pending[path] ? `data:image/webp;base64,${pending[path]}` : path);
 
-  async function processFile(cfg: SectionConfig, file: File): Promise<string> {
+  async function processFile(cfg: Pick<SectionConfig, "dir" | "compress">, file: File): Promise<string> {
     const blob = await compressImage(file, cfg.compress);
     const hash = await hashBlob(blob);
     const base64 = await blobToBase64(blob);
@@ -37,6 +46,21 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
     setPending((p) => ({ ...p, [webPath]: base64 }));
     return webPath;
   }
+
+  async function uploadWorkPhotos(categoryId: string, files: FileList): Promise<string[]> {
+    setBusy(true);
+    try {
+      const added: string[] = [];
+      const cfg = { dir: `work/${categoryId}`, compress: WORK_COMPRESS };
+      for (const file of Array.from(files)) added.push(await processFile(cfg, file));
+      return added;
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const updateWork = (fn: (prev: WorkCategory[]) => WorkCategory[]) =>
+    setManifest((m) => ({ ...m, workCategories: fn(m.workCategories) }));
 
   async function addToGallery(cfg: SectionConfig, files: FileList) {
     setBusy(true);
@@ -88,6 +112,7 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
   }
 
   const dirty = JSON.stringify(manifest) !== JSON.stringify(original);
+  const workError = validateWorkCategories(manifest.workCategories);
 
   async function publish() {
     setPublishError(undefined);
@@ -148,6 +173,16 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
           Log out
         </button>
       </header>
+
+      <section className="mb-10 rounded-2xl border border-[#e0d3c4] bg-white p-5">
+        <h2 className="mb-4 text-lg font-semibold text-[#2d1810]">Events &amp; Our Work categories</h2>
+        <WorkCategoriesEditor
+          categories={manifest.workCategories}
+          update={updateWork}
+          upload={uploadWorkPhotos}
+          srcFor={srcFor}
+        />
+      </section>
 
       {SECTIONS.map((cfg) => (
         <section key={cfg.key} className="mb-10 rounded-2xl border border-[#e0d3c4] bg-white p-5">
@@ -242,12 +277,12 @@ export default function Editor({ onLogout }: { onLogout: () => void }) {
 
       <div className="fixed inset-x-0 bottom-0 border-t border-[#e0d3c4] bg-white/95 px-4 py-3 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <span className="text-sm text-[#4a3428]">
-            {dirty ? "You have unpublished changes" : "No changes"}
+          <span className={`text-sm ${workError ? "text-red-600" : "text-[#4a3428]"}`}>
+            {workError ?? (dirty ? "You have unpublished changes" : "No changes")}
           </span>
           <button
             onClick={publish}
-            disabled={busy || !dirty || publishPhase === "running"}
+            disabled={busy || !dirty || !!workError || publishPhase === "running"}
             className="rounded-full bg-[#e07b39] px-6 py-2.5 font-semibold text-white disabled:opacity-40"
           >
             Publish changes
