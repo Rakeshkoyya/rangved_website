@@ -39,8 +39,7 @@ export default function OurWorkPage() {
           </div>
           <div className="md:col-span-5">
             <p className="text-base leading-relaxed text-[#4a3428] md:text-lg">
-              Weddings, school stages, corporate nights and family ceremonies — pick an event type to step into its
-              gallery.
+              Pick an event to step into its gallery.
             </p>
             <p className="mt-4 flex gap-6 text-sm text-[#4a3428]/80">
               <span>
